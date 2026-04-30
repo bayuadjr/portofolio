@@ -1,0 +1,174 @@
+/* ═══════════════════════════════════════════════════════════════
+   BAYU ADJI RAMADHAN — PORTFOLIO DESIGN SYSTEM
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap');
+
+/* ── Color Tokens ────────────────────────────────────────────── */
+:root {
+  --cream: #F5F2EC;
+  --paper: #FDFCF9;
+  --ink: #1A1916;
+  --ink-light: #6B6860;
+  --terracotta: #E8623A;
+  --acid: #D4FF4F;
+  --sky: #7ECAE3;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  /* Typography */
+  --font-heading: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  /* Border */
+  --border: 1.5px solid var(--ink);
+  --border-light: 1px solid rgba(26, 25, 22, 0.15);
+
+  /* Transition */
+  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition: 0.3s var(--ease);
+}
+
+/* ── Reset ───────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--ink);
+  background-color: var(--cream);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--transition);
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  font-family: var(--font-heading);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* ── Selection ───────────────────────────────────────────────── */
+::selection {
+  background: var(--terracotta);
+  color: var(--paper);
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-light);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink);
+}
+
+/* ── Keyframe Animations ─────────────────────────────────────── */
+
+/* Mascot — outer ring rotation */
+@keyframes spinOuter {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Mascot — inner dashed ring reverse rotation */
+@keyframes spinInner {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+/* Mascot — pulsing dot */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* Mascot — orbit dot 1 (acid) */
+@keyframes orbit1 {
+  from { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+}
+
+/* Mascot — orbit dot 2 (sky) */
+@keyframes orbit2 {
+  from { transform: rotate(180deg) translateX(130px) rotate(-180deg); }
+  to { transform: rotate(540deg) translateX(130px) rotate(-540deg); }
+}
+
+/* Fade in up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtle float */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ── Utility Classes ─────────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}

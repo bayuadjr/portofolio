@@ -1,0 +1,341 @@
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 88vh;
+  border-bottom: var(--border);
+}
+
+/* ── Left Column ─────────────────────────────────────────────── */
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-3xl) var(--space-2xl);
+  animation: fadeInUp 0.8s var(--ease) both;
+}
+
+.tagline {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--ink-light);
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.taglineDash {
+  display: inline-block;
+  width: 20px;
+  height: 2px;
+  background: var(--terracotta);
+}
+
+.name {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  letter-spacing: -3px;
+  line-height: 1.0;
+  margin-bottom: var(--space-lg);
+  color: var(--ink);
+}
+
+.nameAccent {
+  color: var(--terracotta);
+}
+
+.nameSeparator {
+  color: var(--ink-light);
+  opacity: 0.3;
+  margin: 0 0.08em;
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: var(--ink-light);
+  max-width: 520px;
+  margin-bottom: var(--space-xl);
+}
+
+/* ── Pills Row ───────────────────────────────────────────────── */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.pill {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 6px 16px;
+  border: var(--border);
+  color: var(--ink);
+  transition: background var(--transition), color var(--transition);
+}
+
+.pill:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.pillAccent {
+  background: var(--acid);
+  border-color: var(--acid);
+  color: var(--ink);
+}
+
+.pillAccent:hover {
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+  color: var(--paper);
+}
+
+.currentInfo {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ink-light);
+}
+
+/* ── Right Column (Mascot) ───────────────────────────────────── */
+.right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  border-left: var(--border);
+  overflow: hidden;
+  animation: fadeInUp 0.8s var(--ease) 0.2s both;
+}
+
+.cornerText {
+  position: absolute;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ink-light);
+}
+
+.cornerTopRight {
+  top: var(--space-lg);
+  right: var(--space-lg);
+  text-align: right;
+}
+
+.cornerBottomLeft {
+  bottom: var(--space-lg);
+  left: var(--space-lg);
+}
+
+/* ── Mascot Container ────────────────────────────────────────── */
+.mascot {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease-out;
+}
+
+/* Outer ring */
+.outerRing {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border: 2px solid var(--ink-light);
+  border-radius: 50%;
+  animation: spinOuter 20s linear infinite;
+}
+
+.outerRing::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: var(--paper);
+  border-radius: 50%;
+}
+
+/* Inner dashed ring */
+.innerRing {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border: 2px dashed var(--terracotta);
+  border-radius: 50%;
+  animation: spinInner 15s linear infinite;
+}
+
+/* Core circle */
+.core {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  background: var(--paper);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: background var(--transition);
+  cursor: pointer;
+}
+
+.core:hover {
+  background: var(--terracotta);
+}
+
+.initials {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 2rem;
+  color: var(--ink);
+  letter-spacing: 3px;
+  transition: color var(--transition);
+}
+
+.core:hover .initials {
+  color: var(--acid);
+}
+
+.pulsingDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--terracotta);
+  margin-top: 4px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Orbit dots */
+.orbitContainer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orbitDot1 {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--acid);
+  border-radius: 50%;
+  animation: orbit1 8s linear infinite;
+  box-shadow: 0 0 12px var(--acid);
+}
+
+.orbitDot2 {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--sky);
+  border-radius: 50%;
+  animation: orbit2 12s linear infinite;
+  box-shadow: 0 0 12px var(--sky);
+}
+
+/* ── Keyframes defined locally for CSS Modules ── */
+@keyframes spinOuter {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spinInner {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+@keyframes orbit1 {
+  from { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+}
+
+@keyframes orbit2 {
+  from { transform: rotate(180deg) translateX(130px) rotate(-180deg); }
+  to { transform: rotate(540deg) translateX(130px) rotate(-540deg); }
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .left {
+    padding: var(--space-2xl) var(--space-lg);
+  }
+
+  .right {
+    border-left: none;
+    border-top: var(--border);
+    min-height: 50vh;
+  }
+
+  .name {
+    font-size: clamp(2.2rem, 8vw, 4rem);
+    letter-spacing: -2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .left {
+    padding: var(--space-xl) var(--space-md);
+  }
+
+  .mascot {
+    width: 220px;
+    height: 220px;
+  }
+
+  .outerRing {
+    width: 200px;
+    height: 200px;
+  }
+
+  .innerRing {
+    width: 140px;
+    height: 140px;
+  }
+
+  .core {
+    width: 80px;
+    height: 80px;
+  }
+
+  .initials {
+    font-size: 1.4rem;
+  }
+}

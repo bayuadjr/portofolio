@@ -1,0 +1,170 @@
+.section {
+  padding: var(--space-3xl) 0;
+  border-bottom: var(--border);
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 34px;
+  color: var(--ink);
+}
+
+.viewAll {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--terracotta);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: opacity var(--transition);
+}
+
+.viewAll:hover {
+  opacity: 0.7;
+}
+
+/* ── Cards Grid ──────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: var(--border);
+}
+
+.card {
+  padding: var(--space-2xl) var(--space-lg);
+  border-right: var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 380px;
+  background: var(--cream);
+  transition: background var(--transition), color var(--transition);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:last-child {
+  border-right: none;
+}
+
+.card:hover {
+  background: var(--ink);
+}
+
+.card:hover .cardNum,
+.card:hover .cardTitle,
+.card:hover .cardDesc {
+  color: var(--paper);
+}
+
+.card:hover .cardTag {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.card:hover .arrowCircle {
+  background: var(--acid);
+  color: var(--ink);
+  border-color: var(--acid);
+}
+
+/* ── Card Content ────────────────────────────────────────────── */
+.cardTop {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.cardNum {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ink-light);
+  transition: color var(--transition);
+}
+
+.cardTitle {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--ink);
+  transition: color var(--transition);
+}
+
+.cardDesc {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink-light);
+  transition: color var(--transition);
+  margin-top: var(--space-sm);
+}
+
+/* ── Card Footer ─────────────────────────────────────────────── */
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-xl);
+}
+
+.cardTag {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 5px 14px;
+  border: var(--border);
+  color: var(--ink);
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.arrowCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--ink);
+  transition: background var(--transition), color var(--transition), border-color var(--transition), transform var(--transition);
+}
+
+.arrowCircle:hover {
+  transform: translateX(3px);
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    border-right: none;
+    border-bottom: var(--border);
+    min-height: auto;
+    padding: var(--space-xl) var(--space-lg);
+  }
+
+  .card:last-child {
+    border-bottom: none;
+  }
+}

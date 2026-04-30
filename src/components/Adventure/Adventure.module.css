@@ -1,0 +1,224 @@
+.section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  border-bottom: var(--border);
+}
+
+/* ── Left: Adventure Log ─────────────────────────────────────── */
+.left {
+  padding: var(--space-3xl) var(--space-lg);
+  border-right: var(--border);
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 34px;
+  color: var(--ink);
+  margin-bottom: var(--space-2xl);
+}
+
+.photoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 280px 200px;
+  gap: var(--space-md);
+}
+
+.photoBlock {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-md);
+  transition: transform var(--transition);
+}
+
+.photoBlock:hover {
+  transform: scale(1.02);
+}
+
+.block1 {
+  grid-row: 1 / 3;
+  background: var(--terracotta);
+}
+
+.block2 {
+  background: var(--sky);
+}
+
+.block3 {
+  background: var(--acid);
+}
+
+.photoCaption {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ink);
+  background: var(--paper);
+  padding: 6px 14px;
+}
+
+.block1 .photoCaption {
+  color: var(--paper);
+  background: rgba(26, 25, 22, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* ── Block Patterns ──────────────────────────────────────────── */
+.photoBlock::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.12;
+}
+
+.block1::before {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255, 255, 255, 0.15) 10px,
+      rgba(255, 255, 255, 0.15) 12px
+    );
+}
+
+.block2::before {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.15) 0%, transparent 40%);
+}
+
+.block3::before {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 8px,
+      rgba(0, 0, 0, 0.06) 8px,
+      rgba(0, 0, 0, 0.06) 10px
+    );
+}
+
+/* ── Right: Writing Sidebar ──────────────────────────────────── */
+.right {
+  padding: var(--space-3xl) var(--space-lg);
+}
+
+.writingList {
+  display: flex;
+  flex-direction: column;
+}
+
+.postItem {
+  padding: var(--space-lg) 0;
+  border-bottom: var(--border-light);
+  transition: padding-left var(--transition);
+  cursor: pointer;
+}
+
+.postItem:first-child {
+  padding-top: 0;
+}
+
+.postItem:last-child {
+  border-bottom: none;
+}
+
+.postItem:hover {
+  padding-left: var(--space-sm);
+}
+
+.postMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.postDate {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--ink-light);
+}
+
+.postTag {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+
+.tagTerracotta {
+  background: var(--terracotta);
+  color: var(--paper);
+}
+
+.tagSky {
+  background: var(--sky);
+  color: var(--ink);
+}
+
+.tagAcid {
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.postTitle {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--ink);
+  transition: color var(--transition);
+}
+
+.postItem:hover .postTitle {
+  color: var(--terracotta);
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .section {
+    grid-template-columns: 1fr;
+  }
+
+  .left {
+    border-right: none;
+    border-bottom: var(--border);
+  }
+
+  .photoGrid {
+    grid-template-rows: 220px 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .photoGrid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .block1 {
+    grid-row: auto;
+    min-height: 200px;
+  }
+
+  .block2,
+  .block3 {
+    min-height: 160px;
+  }
+}
