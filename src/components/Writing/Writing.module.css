@@ -3,6 +3,25 @@
   min-height: 70vh;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--space-xl);
+}
+
+.viewAll {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 1.1rem;
+  color: var(--terracotta);
+}
+
+.viewAll:hover {
+  text-decoration: underline;
+}
+
 .title {
   font-family: var(--font-heading);
   font-weight: 800;

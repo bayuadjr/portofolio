@@ -12,26 +12,59 @@
 
 .sectionTitle {
   font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 34px;
-  color: var(--ink);
-  margin-bottom: var(--space-2xl);
+  font-size: 2rem;
+  margin-bottom: var(--space-xl);
 }
 
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-xl);
+}
+
+.sectionHeader .sectionTitle {
+  margin-bottom: 0;
+}
+
+.viewAll {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 1.1rem;
+  color: var(--terracotta);
+}
+
+.viewAll:hover {
+  text-decoration: underline;
+}
+
+/* ── Left: Photo Grid ────────────────────────────────────────── */
 .photoGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 280px 200px;
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--space-md);
+}
+
+.photoLink {
+  text-decoration: none;
+  display: block;
 }
 
 .photoBlock {
   position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
   padding: var(--space-md);
+  color: var(--paper);
   transition: transform var(--transition);
+}
+
+.photoLink:hover .photoBlock {
+  transform: translateY(-4px);
 }
 
 .photoBlock:hover {

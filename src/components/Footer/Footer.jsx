@@ -1,10 +1,10 @@
 import styles from './Footer.module.css';
 
 const socials = [
-  { name: 'Instagram', url: 'https://instagram.com' },
-  { name: 'LinkedIn', url: 'https://linkedin.com' },
-  { name: 'GitHub', url: 'https://github.com' },
-  { name: 'Kaggle', url: 'https://kaggle.com' },
+  { name: 'Instagram', url: 'https://www.instagram.com/bayuadjr/' },
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/bayu-adji-ramadhan-886652236/' },
+  { name: 'GitHub', url: 'https://github.com/bayuadjr/' },
+  { name: 'Kaggle', url: 'https://www.kaggle.com/bayuadjiramadhan' },
 ];
 
 export default function Footer() {
@@ -21,11 +21,11 @@ export default function Footer() {
           interesting conversations.
         </p>
         <a
-          href="mailto:bayu@mail.com"
+          href={`mailto:${import.meta.env.VITE_EMAIL}`}
           className={styles.emailCta}
           id="email-cta"
         >
-          bayu@mail.com →
+          {import.meta.env.VITE_EMAIL} →
         </a>
       </div>
 

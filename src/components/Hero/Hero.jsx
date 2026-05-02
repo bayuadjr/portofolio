@@ -10,14 +10,14 @@ export default function Hero() {
     const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     // Calculate rotation (-15 to 15 degrees)
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    
+
     const rotateX = ((y - centerY) / centerY) * -15;
     const rotateY = ((x - centerX) / centerX) * 15;
-    
+
     setRotation({ x: rotateX, y: rotateY });
   };
 
@@ -50,30 +50,30 @@ export default function Hero() {
           <span className={`${styles.pill} ${styles.pillAccent}`}>
             open to collab
           </span>
-          <span className={styles.pill}>Malang → Germany?</span>
-          <span className={styles.pill}>Kaggle learner</span>
-          <span className={styles.pill}>Scrum alum</span>
+          <span className={styles.pill}>Data Science</span>
+          <span className={styles.pill}>Ethnography</span>
+          <span className={styles.pill}>Social Science</span>
         </div>
 
         <p className={styles.currentInfo}>
-          Currently: Universitas Brawijaya · Anthropology '27
+          Currently: Universitas Brawijaya · Anthropology '25
         </p>
       </div>
 
       {/* ── Right Column (Mascot) ── */}
-      <div 
+      <div
         className={styles.right}
         ref={containerRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
         <span className={`${styles.cornerText} ${styles.cornerTopRight}`}>
-          Malang, Indonesia
+          Indonesia
           <br />
           Est. 2005
         </span>
 
-        <div 
+        <div
           className={styles.mascot}
           style={{
             transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
