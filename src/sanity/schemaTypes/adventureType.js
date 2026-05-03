@@ -1,8 +1,8 @@
 import { defineField, defineType } from 'sanity';
 
-export const adventureType = defineType({
-  name: 'adventure',
-  title: 'Adventure Photo',
+export const glimpseType = defineType({
+  name: 'glimpse',
+  title: 'Glimpse',
   type: 'document',
   fields: [
     defineField({
@@ -22,13 +22,33 @@ export const adventureType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'mediaType',
+      title: 'Media Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Photo', value: 'photo' },
+          { title: 'Video', value: 'video' },
+        ],
+        layout: 'radio',
+      },
+      validation: (Rule) => Rule.required(),
+      initialValue: 'photo',
+    }),
+    defineField({
       name: 'image',
       title: 'Image',
       type: 'image',
       options: {
         hotspot: true,
       },
-      validation: (Rule) => Rule.required(),
+      hidden: ({ parent }) => parent?.mediaType !== 'photo',
+    }),
+    defineField({
+      name: 'videoUrl',
+      title: 'Video URL (Cloudinary)',
+      type: 'string',
+      hidden: ({ parent }) => parent?.mediaType !== 'video',
     }),
     defineField({
       name: 'location',
@@ -46,6 +66,12 @@ export const adventureType = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'hashtags',
+      title: 'Hashtags',
+      type: 'array',
+      of: [{ type: 'string' }],
+    }),
+    defineField({
       name: 'colorClass',
       title: 'Block Style (Color)',
       type: 'string',
@@ -60,3 +86,4 @@ export const adventureType = defineType({
     }),
   ],
 });
+

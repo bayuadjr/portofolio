@@ -32,16 +32,40 @@ export const projectType = defineType({
       title: 'Tags',
       type: 'array',
       of: [{ type: 'string' }],
+    }),
+    defineField({
+      name: 'projectType',
+      title: 'Project Type',
+      type: 'string',
       options: {
         list: [
-          { title: 'Ethnography', value: 'Ethnography' },
-          { title: 'Data Science', value: 'Data Science' },
-          { title: 'Project Management', value: 'Project Management' },
-          { title: 'Qualitative Research', value: 'Qualitative Research' },
-          { title: 'Social Theory', value: 'Social Theory' },
-          { title: 'Computational Social Science', value: 'Computational Social Science' },
+          { title: 'Research', value: 'research' },
+          { title: 'Website', value: 'website' },
+          { title: 'ML Model', value: 'ml-model' },
+          { title: 'Brand', value: 'brand' },
+          { title: 'Other', value: 'other' },
         ],
       },
+      validation: (Rule) => Rule.required(),
+      initialValue: 'research',
+    }),
+    defineField({
+      name: 'previewVideo',
+      title: 'Preview Video (Cloudinary URL)',
+      type: 'string',
+      description: 'Short 5-10 second autoplay preview video',
+      hidden: ({ parent }) => parent?.projectType === 'research',
+    }),
+    defineField({
+      name: 'liveUrl',
+      title: 'Live Demo URL',
+      type: 'string',
+      hidden: ({ parent }) => parent?.projectType === 'research',
+    }),
+    defineField({
+      name: 'repoUrl',
+      title: 'Repository URL (GitHub, etc)',
+      type: 'string',
     }),
     defineField({
       name: 'summary',
@@ -49,6 +73,7 @@ export const projectType = defineType({
       type: 'text',
       rows: 3,
     }),
+
     defineField({
       name: 'coverImage',
       title: 'Cover Image',

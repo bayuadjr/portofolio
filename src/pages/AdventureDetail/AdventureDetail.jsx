@@ -5,62 +5,75 @@ import styles from './AdventureDetail.module.css';
 
 export default function AdventureDetail() {
   const { slug } = useParams();
-  const [adventure, setAdventure] = useState(null);
+  const [glimpse, setGlimpse] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchAdventure = async () => {
+    const fetchGlimpse = async () => {
       try {
-        const query = `*[_type == "adventure" && slug.current == $slug][0]`;
+        const query = `*[_type == "glimpse" && slug.current == $slug][0]`;
         const data = await client.fetch(query, { slug });
-        setAdventure(data);
+        setGlimpse(data);
       } catch (error) {
-        console.error("Failed to fetch adventure:", error);
+        console.error("Failed to fetch glimpse:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAdventure();
+    fetchGlimpse();
   }, [slug]);
 
   if (loading) return <div className={styles.loading}>Loading...</div>;
-  if (!adventure) return <div className={styles.empty}>Adventure not found.</div>;
+  if (!glimpse) return <div className={styles.empty}>Glimpse not found.</div>;
 
   return (
     <article className={styles.container}>
-      <div className={styles.imageWrapper}>
-        {adventure.image && (
+      <div className={styles.mediaWrapper}>
+        {glimpse.mediaType === 'video' && glimpse.videoUrl ? (
+          <video autoPlay muted loop playsInline className={styles.video}>
+            <source src={glimpse.videoUrl} type="video/mp4" />
+          </video>
+        ) : glimpse.image ? (
           <img
-            src={urlFor(adventure.image).url()}
-            alt={adventure.title || adventure.location || 'Adventure'}
+            src={urlFor(glimpse.image).url()}
+            alt={glimpse.title || glimpse.location || 'Glimpse'}
             className={styles.image}
           />
-        )}
+        ) : null}
       </div>
 
       <div className={styles.content}>
         <header className={styles.header}>
-          {adventure.location && (
+          {glimpse.location && (
             <h1 className={styles.location}>
-              <span className={styles.pin}>📍</span> {adventure.location}
+              <span className={styles.pin}>📍</span> {glimpse.location}
             </h1>
           )}
-          {adventure.date && (
+          {glimpse.date && (
             <div className={styles.date}>
-              {new Date(adventure.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+              {new Date(glimpse.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
             </div>
           )}
         </header>
 
-        {adventure.caption && (
-          <p className={styles.caption}>{adventure.caption}</p>
+        {glimpse.caption && (
+          <p className={styles.caption}>{glimpse.caption}</p>
+        )}
+
+        {glimpse.hashtags && glimpse.hashtags.length > 0 && (
+          <div className={styles.hashtags}>
+            {glimpse.hashtags.map(tag => (
+              <span key={tag} className={styles.hashtagPill}>#{tag}</span>
+            ))}
+          </div>
         )}
 
         <div className={styles.footer}>
-          <Link to="/adventure" className={styles.backLink}>← Back to Adventure</Link>
+          <Link to="/adventure" className={styles.backLink}>← Back to Glimpses</Link>
         </div>
       </div>
     </article>
   );
 }
+

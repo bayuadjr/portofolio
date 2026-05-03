@@ -104,6 +104,63 @@
   line-height: 1.4;
 }
 
+.video {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform var(--transition);
+}
+
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.filterBtn {
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--ink);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.filterBtn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.filterBtn.active {
+  background: var(--ink);
+  color: var(--acid);
+  border-color: var(--ink);
+}
+
+.tagOverlay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+  opacity: 0.8;
+}
+
+.smallTag {
+  font-size: 0.75rem;
+  font-family: var(--font-body);
+  color: var(--acid);
+  font-weight: 600;
+}
+
+.masonryItem:hover .video {
+  transform: scale(1.03);
+}
+
 .emptyState {
   min-height: 30vh;
   display: flex;
@@ -114,6 +171,7 @@
   font-style: italic;
   font-size: 1.25rem;
 }
+
 
 @media (max-width: 1024px) {
   .masonryGrid {

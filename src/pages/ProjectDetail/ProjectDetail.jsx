@@ -43,9 +43,12 @@ export default function ProjectDetail() {
       <div className={styles.content}>
         <header className={styles.header}>
           <div className={styles.headerLeft}>
+            <div className={styles.typeRow}>
+              {project.projectType && <span className={styles.typeBadge}>{project.projectType}</span>}
+              <span className={styles.year}>{project.year}</span>
+            </div>
             <h1 className={styles.title}>{project.title}</h1>
             <div className={styles.meta}>
-              {project.year && <span className={styles.year}>{project.year}</span>}
               {project.tag && project.tag.map(t => (
                 <span key={t} className={styles.tag}>{t}</span>
               ))}
@@ -57,6 +60,43 @@ export default function ProjectDetail() {
         </header>
 
         <hr className={styles.divider} />
+
+        {/* WEBSITE & ML-MODEL & BRAND types — add preview section */}
+        {['website', 'ml-model', 'brand', 'other'].includes(project.projectType) && (
+          <div className={styles.previewSection}>
+            {project.previewVideo && (
+              <video autoPlay muted loop playsInline className={styles.previewVideo}>
+                <source src={project.previewVideo} type="video/mp4" />
+              </video>
+            )}
+            
+            {(project.liveUrl || project.repoUrl) && (
+              <div className={styles.ctaRow}>
+                {project.liveUrl && (
+                  <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className={styles.liveBtn}>
+                    → View Live Demo
+                  </a>
+                )}
+                {project.repoUrl && (
+                  <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" className={styles.repoBtn}>
+                    → GitHub Repo
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* RESEARCH type — repo button only */}
+        {project.projectType === 'research' && project.repoUrl && (
+          <div className={styles.previewSection}>
+            <div className={styles.ctaRow}>
+              <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" className={styles.repoBtn}>
+                → GitHub Repo
+              </a>
+            </div>
+          </div>
+        )}
 
         <div className={styles.body}>
           {project.body ? (
@@ -73,3 +113,4 @@ export default function ProjectDetail() {
     </article>
   );
 }
+

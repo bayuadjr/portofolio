@@ -4,7 +4,7 @@
   border-bottom: var(--border);
 }
 
-/* ── Left: Adventure Log ─────────────────────────────────────── */
+/* ── Left: Glimpses ─────────────────────────────────────── */
 .left {
   padding: var(--space-3xl) var(--space-lg);
   border-right: var(--border);
@@ -52,15 +52,28 @@
 }
 
 .photoBlock {
-  position: relative;
-  aspect-ratio: 1 / 1;
+  height: 200px;
   border-radius: 12px;
+  position: relative;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
   padding: var(--space-md);
-  color: var(--paper);
   transition: transform var(--transition);
+  background-color: var(--ink); /* Fallback */
+}
+
+.previewMedia {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition);
+}
+
+.photoBlock:hover .previewMedia {
+  transform: scale(1.05);
 }
 
 .photoLink:hover .photoBlock {

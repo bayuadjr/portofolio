@@ -48,8 +48,9 @@ export default function Navbar() {
           className={styles.navLink}
           onClick={handleLinkClick}
         >
-          adventure
+          glimpses
         </Link>
+
         <button
           className={styles.cta}
           onClick={() => {

@@ -11,17 +11,17 @@ const tagClassMap = {
 
 export default function Adventure() {
   const [posts, setPosts] = useState([]);
-  const [photos, setPhotos] = useState([]);
+  const [glimpses, setGlimpses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       client.fetch('*[_type == "post"] | order(date desc) [0...3]'),
-      client.fetch('*[_type == "adventure"] | order(date desc) [0...3]'),
+      client.fetch('*[_type == "glimpse"] | order(date desc) [0...3]'),
     ])
-      .then(([postsData, photosData]) => {
+      .then(([postsData, glimpsesData]) => {
         setPosts(postsData);
-        setPhotos(photosData);
+        setGlimpses(glimpsesData);
         setLoading(false);
       })
       .catch(console.error);
@@ -29,36 +29,36 @@ export default function Adventure() {
 
   return (
     <section className={styles.section} id="adventure-writing">
-      {/* ── Left: Adventure Log ── */}
+      {/* ── Left: Glimpses ── */}
       <div className={styles.left}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Adventure Log</h2>
+          <h2 className={styles.sectionTitle}>Glimpses</h2>
           <Link to="/adventure" className={styles.viewAll}>See All →</Link>
         </div>
         <div className={styles.photoGrid}>
           {loading ? (
-            <p>Loading photos...</p>
-          ) : photos.length > 0 ? (
-            photos.map((photo) => (
-              <Link to={`/adventure/${photo.slug?.current || photo._id}`} key={photo._id} className={styles.photoLink}>
-                <div
-                  className={`${styles.photoBlock} ${styles[photo.colorClass] || ''}`}
-                  style={
-                    photo.image
-                      ? {
-                          backgroundImage: `url(${urlFor(photo.image).url()})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                        }
-                      : {}
-                  }
-                >
-                  <span className={styles.photoCaption}>{photo.caption}</span>
+            <p>Loading glimpses...</p>
+          ) : glimpses.length > 0 ? (
+            glimpses.map((item) => (
+              <Link to={`/adventure/${item.slug?.current || item._id}`} key={item._id} className={styles.photoLink}>
+                <div className={`${styles.photoBlock} ${styles[item.colorClass] || ''}`}>
+                  {item.mediaType === 'video' && item.videoUrl ? (
+                    <video autoPlay muted loop playsInline className={styles.previewMedia}>
+                      <source src={item.videoUrl} type="video/mp4" />
+                    </video>
+                  ) : item.image ? (
+                    <img 
+                      src={urlFor(item.image).width(400).url()} 
+                      alt={item.title} 
+                      className={styles.previewMedia} 
+                    />
+                  ) : null}
+                  <span className={styles.photoCaption}>{item.caption}</span>
                 </div>
               </Link>
             ))
           ) : (
-            <p>No photos found.</p>
+            <p>No glimpses found.</p>
           )}
         </div>
       </div>

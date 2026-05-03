@@ -14,17 +14,37 @@
   font-size: 1.25rem;
 }
 
-.imageWrapper {
+.mediaWrapper {
   width: 100%;
-  background-color: var(--ink); /* fallback if image doesn't load fully */
+  background: var(--paper-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
-.image {
+.image, .video {
   width: 100%;
   max-height: 80vh;
   object-fit: cover;
-  object-position: center;
   display: block;
+}
+
+.hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-lg);
+}
+
+.hashtagPill {
+  padding: 4px 12px;
+  background: var(--ink);
+  color: var(--acid);
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font-heading);
 }
 
 .content {

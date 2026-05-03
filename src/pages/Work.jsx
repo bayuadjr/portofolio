@@ -73,6 +73,7 @@ export default function Work() {
             {filteredProjects.map((project) => (
               <Link to={`/work/${project.slug?.current || project._id}`} className={styles.cardLink} key={project._id}>
                 <article className={styles.card}>
+                  {project.projectType && <span className={styles.cardType}>{project.projectType}</span>}
                   <div className={styles.cardTop}>
                     <span className={styles.cardNum}>{project.num} —</span>
                     <h3 className={styles.cardTitle}>{project.title}</h3>
@@ -87,6 +88,7 @@ export default function Work() {
                   </div>
                 </article>
               </Link>
+
             ))}
           </div>
         ) : (
