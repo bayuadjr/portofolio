@@ -68,7 +68,8 @@ a {
   transition: color var(--transition);
 }
 
-ul, ol {
+ul,
+ol {
   list-style: none;
 }
 
@@ -85,7 +86,12 @@ img {
   display: block;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 800;
   line-height: 1.1;
@@ -119,32 +125,61 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Mascot — outer ring rotation */
 @keyframes spinOuter {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Mascot — inner dashed ring reverse rotation */
 @keyframes spinInner {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
 }
 
 /* Mascot — pulsing dot */
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.7); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(0.7);
+  }
 }
 
 /* Mascot — orbit dot 1 (acid) */
 @keyframes orbit1 {
-  from { transform: rotate(0deg) translateX(100px) rotate(0deg); }
-  to { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+  from {
+    transform: rotate(0deg) translateX(100px) rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg) translateX(100px) rotate(-360deg);
+  }
 }
 
 /* Mascot — orbit dot 2 (sky) */
 @keyframes orbit2 {
-  from { transform: rotate(180deg) translateX(130px) rotate(-180deg); }
-  to { transform: rotate(540deg) translateX(130px) rotate(-540deg); }
+  from {
+    transform: rotate(180deg) translateX(130px) rotate(-180deg);
+  }
+
+  to {
+    transform: rotate(540deg) translateX(130px) rotate(-540deg);
+  }
 }
 
 /* Fade in up */
@@ -153,6 +188,7 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 0;
     transform: translateY(24px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -161,8 +197,15 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Subtle float */
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 /* ── Utility Classes ─────────────────────────────────────────── */
@@ -171,4 +214,15 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 1320px;
   margin: 0 auto;
   padding: 0 var(--space-lg);
+}
+
+/* ── Main Layout Padding for navbar ─────────────────────────────────────── */
+main {
+  padding-top: 80px;
+}
+
+@media (max-width: 768px) {
+  main {
+    padding-top: 64px;
+  }
 }

@@ -1,67 +1,103 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
+  const [visible, setVisible] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLinkClick = () => {
+  // Hide on scroll down, show on scroll up
+  useEffect(() => {
+    let lastScroll = window.scrollY;
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+
+      requestAnimationFrame(() => {
+        const current = window.scrollY;
+        if (current < 80) {
+          setVisible(true);
+        } else if (current > lastScroll + 8) {
+          setVisible(false);
+          setMenuOpen(false);
+        } else if (current < lastScroll - 8) {
+          setVisible(true);
+        }
+        lastScroll = current;
+        ticking = false;
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close menu on route change
+  useEffect(() => {
     setMenuOpen(false);
-  };
+  }, [location]);
+
+  // Lock body scroll when menu open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
+  const close = () => setMenuOpen(false);
 
   return (
-    <nav className={styles.navbar} id="navbar">
-      <Link to="/" className={styles.logo}>
-        bayu<span className={styles.logoDot}>.</span>
-      </Link>
+    <>
+      <nav className={`${styles.nav} ${!visible ? styles.hidden : ''}`}>
 
-      <div
-        className={`${styles.menuToggle} ${menuOpen ? styles.open : ''}`}
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-label="Toggle navigation menu"
-        role="button"
-        tabIndex={0}
-      >
-        <span />
-        <span />
-        <span />
-      </div>
+        {/* LEFT GROUP: logo + work + writing */}
+        <div className={styles.left}>
+          <Link to="/" className={styles.logo} onClick={close}>
+            bayu<span>.</span>
+          </Link>
+          <Link to="/work" className={styles.link} onClick={close}>work</Link>
+          <Link to="/writing" className={styles.link} onClick={close}>writing</Link>
+        </div>
 
-      <div className={`${styles.navLinks} ${menuOpen ? styles.open : ''}`}>
-        <Link
-          to="/work"
-          className={styles.navLink}
-          onClick={handleLinkClick}
-        >
-          work
-        </Link>
-        <Link
-          to="/writing"
-          className={styles.navLink}
-          onClick={handleLinkClick}
-        >
-          writing
-        </Link>
-        <Link
-          to="/adventure"
-          className={styles.navLink}
-          onClick={handleLinkClick}
-        >
-          glimpses
-        </Link>
+        {/* RIGHT GROUP: glimpses + say hello + hamburger */}
+        <div className={styles.right}>
+          <Link to="/adventure" className={`${styles.link} ${styles.linkDesktop}`} onClick={close}>
+            glimpses
+          </Link>
+          <button
+            className={`${styles.cta} ${styles.ctaDesktop}`}
+            onClick={() => { close(); navigate('/contact'); }}
+          >
+            say hello →
+          </button>
+          <button
+            className={`${styles.burger} ${menuOpen ? styles.burgerOpen : ''}`}
+            onClick={() => setMenuOpen(v => !v)}
+            aria-label="Toggle menu"
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
 
+      </nav>
+
+      {/* MOBILE MENU — completely outside <nav> */}
+      <div className={`${styles.mobile} ${menuOpen ? styles.mobileOpen : ''}`}>
+        <Link to="/work" className={styles.mobileLink} onClick={close}>work</Link>
+        <Link to="/writing" className={styles.mobileLink} onClick={close}>writing</Link>
+        <Link to="/adventure" className={styles.mobileLink} onClick={close}>glimpses</Link>
         <button
-          className={styles.cta}
-          onClick={() => {
-            handleLinkClick();
-            navigate('/contact');
-          }}
-          id="nav-cta"
+          className={styles.mobileCta}
+          onClick={() => { close(); navigate('/contact'); }}
         >
           say hello →
         </button>
       </div>
-    </nav>
+    </>
   );
 }
