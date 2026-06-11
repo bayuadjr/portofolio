@@ -5,6 +5,7 @@ import styles from './Navbar.module.css';
 export default function Navbar() {
   const [visible, setVisible] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [atHero, setAtHero] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -21,11 +22,15 @@ export default function Navbar() {
         const current = window.scrollY;
         if (current < 80) {
           setVisible(true);
-        } else if (current > lastScroll + 8) {
-          setVisible(false);
-          setMenuOpen(false);
-        } else if (current < lastScroll - 8) {
-          setVisible(true);
+          setAtHero(true);
+        } else {
+          setAtHero(false);
+          if (current > lastScroll + 8) {
+            setVisible(false);
+            setMenuOpen(false);
+          } else if (current < lastScroll - 8) {
+            setVisible(true);
+          }
         }
         lastScroll = current;
         ticking = false;
@@ -51,7 +56,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`${styles.nav} ${!visible ? styles.hidden : ''}`}>
+      <nav className={`${styles.nav} ${!visible ? styles.hidden : ''} ${atHero ? styles.hero : ''}`}>
 
         {/* LEFT GROUP: logo + work + writing */}
         <div className={styles.left}>
@@ -69,7 +74,7 @@ export default function Navbar() {
           </Link>
           <button
             className={`${styles.cta} ${styles.ctaDesktop}`}
-            onClick={() => { close(); navigate('/contact'); }}
+            onClick={() => { close(); navigate('/'); }}
           >
             say hello →
           </button>
@@ -86,14 +91,14 @@ export default function Navbar() {
 
       </nav>
 
-      {/* MOBILE MENU — completely outside <nav> */}
+      {/* MOBILE MENU */}
       <div className={`${styles.mobile} ${menuOpen ? styles.mobileOpen : ''}`}>
         <Link to="/work" className={styles.mobileLink} onClick={close}>work</Link>
         <Link to="/writing" className={styles.mobileLink} onClick={close}>writing</Link>
         <Link to="/adventure" className={styles.mobileLink} onClick={close}>glimpses</Link>
         <button
           className={styles.mobileCta}
-          onClick={() => { close(); navigate('/contact'); }}
+          onClick={() => { close(); navigate('/'); }}
         >
           say hello →
         </button>

@@ -11,14 +11,22 @@
   justify-content: space-between;
   padding: 0 40px;
 
-  /* Mix blend mode magic */
-  background: transparent;
-  mix-blend-mode: difference;
+  /* Ganti dari mix-blend-mode ke solid + backdrop */
+  background: rgba(26, 25, 22, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 
   /* Smooth hide/show */
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.3s ease;
 }
 
+/* Variasi: lebih transparan pas di hero */
+.nav.hero {
+  background: rgba(26, 25, 22, 0.6);
+}
+
+/* Saat hidden */
 .nav.hidden {
   transform: translateY(-100%);
 }
@@ -43,13 +51,13 @@
   font-weight: 800;
   font-size: 22px;
   letter-spacing: -1px;
-  color: #fff;
+  color: var(--cream);
   text-decoration: none;
   line-height: 1;
 }
 
 .logo span {
-  color: #fff;
+  color: var(--terracotta);
 }
 
 /* ── Nav links ───────────────────────────────────────────────── */
@@ -59,8 +67,13 @@
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: #fff;
+  color: var(--cream);
   text-decoration: none;
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: var(--acid);
 }
 
 /* ── CTA button ──────────────────────────────────────────────── */
@@ -71,17 +84,18 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   padding: 9px 18px;
-  background: #fff;
-  color: #000;
-  border: 1.5px solid #fff;
+  background: var(--acid);
+  color: var(--ink);
+  border: 1.5px solid var(--acid);
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
   white-space: nowrap;
 }
 
 .cta:hover {
-  background: transparent;
-  color: #fff;
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+  color: var(--paper);
 }
 
 /* ── Hamburger ───────────────────────────────────────────────── */
@@ -102,7 +116,7 @@
   display: block;
   width: 22px;
   height: 2px;
-  background: #fff;
+  background: var(--cream);
   transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
@@ -119,7 +133,6 @@
 }
 
 /* ── Mobile menu ─────────────────────────────────────────────── */
-/* Completely separate from <nav> — no blend mode conflict */
 .mobile {
   position: fixed;
   inset: 0;
@@ -131,7 +144,6 @@
   justify-content: center;
   gap: 40px;
 
-  /* Hidden by default */
   opacity: 0;
   pointer-events: none;
   transform: translateY(-16px);
@@ -185,13 +197,11 @@
     padding: 0 20px;
   }
 
-  /* Hide desktop-only elements */
   .linkDesktop,
   .ctaDesktop {
     display: none;
   }
 
-  /* Show hamburger */
   .burger {
     display: flex;
   }
@@ -202,8 +212,6 @@
 }
 
 @media (min-width: 769px) {
-
-  /* Always hide hamburger and mobile menu on desktop */
   .burger {
     display: none;
   }
