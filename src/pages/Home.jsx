@@ -1,15 +1,13 @@
 import Hero from '../components/Hero/Hero';
+import GlimpsesPreview from '../components/GlimpsesPreview/GlimpsesPreview';
 import Projects from '../components/Projects/Projects';
-import Adventure from '../components/Adventure/Adventure';
-
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <Projects />
-      <Adventure />
-      
+      <GlimpsesPreview />
+      <Projects limit={2} />
     </>
   );
 }

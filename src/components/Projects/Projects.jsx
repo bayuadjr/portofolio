@@ -3,19 +3,19 @@ import { Link } from 'react-router-dom';
 import { client } from '../../sanity/client';
 import styles from './Projects.module.css';
 
-export default function Projects() {
+export default function Projects({ limit = 3 }) {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     client
-      .fetch('*[_type == "project"] | order(num asc) [0...3]')
+      .fetch(`*[_type == "project"] | order(num asc) [0...${limit}]`)
       .then((data) => {
         setProjects(data);
         setLoading(false);
       })
       .catch(console.error);
-  }, []);
+  }, [limit]);
 
   return (
     <section className={styles.section} id="projects">

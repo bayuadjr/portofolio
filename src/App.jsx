@@ -20,8 +20,8 @@ function Layout() {
   return (
     <>
       {!isStudio && <Navbar />}
-      <main>
-        <Routes>
+      <main key={location.pathname}>
+        <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/work" element={<Work />} />
           <Route path="/work/:slug" element={<ProjectDetail />} />

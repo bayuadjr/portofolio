@@ -4,52 +4,43 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 72px;
+  height: 56px;
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 40px;
-
-  /* Ganti dari mix-blend-mode ke solid + backdrop */
+  padding: 0 32px;
   background: rgba(26, 25, 22, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-
-  /* Smooth hide/show */
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              background 0.3s ease;
+              background 0.3s ease,
+              backdrop-filter 0.3s ease;
 }
 
-/* Variasi: lebih transparan pas di hero */
 .nav.hero {
-  background: rgba(26, 25, 22, 0.6);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
-/* Saat hidden */
 .nav.hidden {
   transform: translateY(-100%);
 }
 
-/* ── Left group ──────────────────────────────────────────────── */
-.left {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-
-/* ── Right group ─────────────────────────────────────────────── */
+/* ── Groups ──────────────────────────────────────────────────── */
+.left,
 .right {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
 }
 
 /* ── Logo ────────────────────────────────────────────────────── */
 .logo {
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: 22px;
+  font-size: 18px;
   letter-spacing: -1px;
   color: var(--cream);
   text-decoration: none;
@@ -60,13 +51,44 @@
   color: var(--terracotta);
 }
 
+.nav.hero .logo {
+  color: var(--ink);
+}
+
+.nav.hero .logo span {
+  color: var(--rust);
+}
+
+/* ── Intermittent dividers ───────────────────────────────────── */
+.divider {
+  width: 1px;
+  height: 12px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(237, 231, 220, 0.55) 0px,
+    rgba(237, 231, 220, 0.55) 3px,
+    transparent 3px,
+    transparent 6px
+  );
+}
+
+.nav.hero .divider {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(122, 111, 100, 0.45) 0px,
+    rgba(122, 111, 100, 0.45) 3px,
+    transparent 3px,
+    transparent 6px
+  );
+}
+
 /* ── Nav links ───────────────────────────────────────────────── */
 .link {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 12px;
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   color: var(--cream);
   text-decoration: none;
   transition: color 0.2s;
@@ -76,60 +98,68 @@
   color: var(--acid);
 }
 
-/* ── CTA button ──────────────────────────────────────────────── */
+.nav.hero .link {
+  color: var(--ink);
+}
+
+.nav.hero .link:hover {
+  color: var(--rust);
+}
+
+/* ── CTA — text only, accent color ───────────────────────────── */
 .cta {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 12px;
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  padding: 9px 18px;
-  background: var(--acid);
-  color: var(--ink);
-  border: 1.5px solid var(--acid);
+  letter-spacing: 3px;
+  padding: 0;
+  background: none;
+  color: var(--acid);
+  border: none;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  transition: color 0.2s;
   white-space: nowrap;
 }
 
 .cta:hover {
-  background: var(--terracotta);
-  border-color: var(--terracotta);
-  color: var(--paper);
+  color: var(--terracotta);
 }
 
-/* ── Hamburger ───────────────────────────────────────────────── */
+.nav.hero .cta {
+  color: var(--rust);
+}
+
+.nav.hero .cta:hover {
+  color: var(--terracotta);
+}
+
+/* ── Burger — absurd icon ────────────────────────────────────── */
 .burger {
   display: none;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: 5px;
   width: 32px;
   height: 32px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 0;
 }
 
-.burger span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: var(--cream);
-  transition: transform 0.25s ease, opacity 0.25s ease;
+.burgerIcon {
+  font-size: 20px;
+  line-height: 1;
+  color: var(--cream);
+  transition: transform 0.25s ease, color 0.2s;
 }
 
-.burgerOpen span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
+.burgerOpen .burgerIcon {
+  transform: rotate(90deg) scale(1.1);
 }
 
-.burgerOpen span:nth-child(2) {
-  opacity: 0;
-}
-
-.burgerOpen span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
+.nav.hero .burgerIcon {
+  color: var(--ink);
 }
 
 /* ── Mobile menu ─────────────────────────────────────────────── */
@@ -142,8 +172,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 40px;
-
+  gap: 36px;
   opacity: 0;
   pointer-events: none;
   transform: translateY(-16px);
@@ -159,46 +188,48 @@
 .mobileLink {
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: 32px;
+  font-size: 28px;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   color: var(--cream);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .mobileLink:hover {
-  color: var(--terracotta);
+  color: var(--acid);
 }
 
 .mobileCta {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  padding: 12px 28px;
-  background: var(--acid);
-  color: var(--ink);
+  letter-spacing: 3px;
+  padding: 0;
+  background: none;
+  color: var(--acid);
   border: none;
   cursor: pointer;
-  margin-top: 8px;
-  transition: opacity 0.2s;
+  margin-top: 4px;
+  transition: color 0.2s;
 }
 
 .mobileCta:hover {
-  opacity: 0.85;
+  color: var(--terracotta);
 }
 
 /* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .nav {
-    height: 60px;
+    height: 52px;
     padding: 0 20px;
   }
 
+  .left .divider,
   .linkDesktop,
-  .ctaDesktop {
+  .ctaDesktop,
+  .dividerDesktop {
     display: none;
   }
 
@@ -207,7 +238,7 @@
   }
 
   .left {
-    gap: 20px;
+    gap: 16px;
   }
 }
 
