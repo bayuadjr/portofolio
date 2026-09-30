@@ -1,207 +1,173 @@
+/* ===========================================
+   Beyond / Glimpses — Editorial Mosaic Layout
+   =========================================== */
+
 .hero {
-  padding: var(--space-3xl) var(--space-lg);
-  border-bottom: var(--border);
+  padding: 80px 0 40px;
+  border-bottom: 1px solid var(--line);
 }
 
 .heroTitle {
-  font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  letter-spacing: -2px;
-  margin-bottom: var(--space-md);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: clamp(40px, 6vw, 64px);
+  letter-spacing: -0.02em;
   color: var(--ink);
+  margin-bottom: 16px;
+  line-height: 1.1;
 }
 
 .accent {
-  color: var(--terracotta);
+  color: var(--mid);
 }
 
 .heroDesc {
-  font-family: var(--font-body);
-  font-weight: 300;
+  font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
-  font-size: 1.05rem;
-  color: var(--ink-light);
-  max-width: 520px;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--mid);
+  max-width: 600px;
   line-height: 1.6;
 }
 
 .content {
-  padding: var(--space-2xl) var(--space-lg) var(--space-3xl);
-  max-width: 1400px;
-  margin: 0 auto;
+  padding-bottom: 100px;
 }
 
-.masonryGrid {
-  column-count: 4;
-  column-gap: var(--space-md);
-}
-
-.masonryItemLink {
-  text-decoration: none;
-  display: block;
-  break-inside: avoid;
-  margin-bottom: var(--space-md);
-}
-
-.masonryItem {
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
-  background-color: var(--paper);
-  break-inside: avoid;
-}
-
-.image {
-  width: 100%;
-  display: block;
-  object-fit: cover;
-  transition: transform var(--transition);
-}
-
-.imagePlaceholder {
-  width: 100%;
-  padding-bottom: 100%; /* Square placeholder */
-  background-color: var(--ink);
-}
-
-.block1 { background-color: var(--terracotta); }
-.block2 { background-color: var(--sky); }
-.block3 { background-color: var(--acid); }
-
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(26, 25, 22, 0.7); /* ink with opacity */
-  color: var(--paper);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: var(--space-md);
-  opacity: 0;
-  transition: opacity var(--transition);
-}
-
-.masonryItem:hover .overlay {
-  opacity: 1;
-}
-
-.masonryItem:hover .image {
-  transform: scale(1.03);
-}
-
-.location {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1rem;
-  margin-bottom: var(--space-xs);
-  display: block;
-}
-
-.caption {
-  font-size: 0.85rem;
-  font-style: italic;
-  line-height: 1.4;
-}
-
-.video {
-  width: 100%;
-  display: block;
-  object-fit: cover;
-  transition: transform var(--transition);
-}
-
+/* ---------- Filter Bar ---------- */
 .filterBar {
   display: flex;
+  gap: 8px;
   flex-wrap: wrap;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-xl);
+  padding: 32px 0;
+  border-bottom: 1px solid var(--line);
 }
 
 .filterBtn {
-  padding: var(--space-xs) var(--space-md);
-  border: 1px solid var(--ink);
-  border-radius: 100px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
   background: transparent;
-  color: var(--ink);
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 0.85rem;
+  color: var(--mid);
   cursor: pointer;
-  transition: all var(--transition);
+  transition: all 0.15s ease;
+  line-height: 1.4;
 }
 
-.filterBtn:hover {
-  background: var(--ink);
-  color: var(--paper);
+.filterBtn:hover:not(.active) {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: var(--panel);
 }
 
 .filterBtn.active {
   background: var(--ink);
-  color: var(--acid);
+  color: var(--paper);
   border-color: var(--ink);
 }
 
-.tagOverlay {
+/* ---------- Mosaic Masonry Grid ---------- */
+.mosaic {
+  padding: 48px 0 60px;
+  column-count: 3;
+  column-gap: 20px;
+}
+
+.itemLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  transition: opacity 0.15s ease, border-color 0.15s ease;
+}
+
+.itemLink:hover .card {
+  border-color: var(--ink);
+  opacity: 0.85;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.captionBox {
+  padding: 14px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.location {
+  display: block;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mid);
+  margin-bottom: 4px;
+}
+
+.caption {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.tagRow {
   display: flex;
+  gap: 6px;
   flex-wrap: wrap;
-  gap: var(--space-xs);
-  margin-top: var(--space-sm);
-  opacity: 0.8;
+  margin-top: 8px;
 }
 
-.smallTag {
-  font-size: 0.75rem;
-  font-family: var(--font-body);
-  color: var(--acid);
-  font-weight: 600;
+.tag {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  color: var(--mid);
 }
 
-.masonryItem:hover .video {
-  transform: scale(1.03);
-}
-
+/* Empty State */
 .emptyState {
-  min-height: 30vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-body);
-  color: var(--ink-light);
+  padding: 80px 0;
+  font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
-  font-size: 1.25rem;
+  font-size: 18px;
+  color: var(--mid);
 }
 
-
-@media (max-width: 1024px) {
-  .masonryGrid {
-    column-count: 3;
-  }
-}
-
-@media (max-width: 768px) {
-  .hero {
-    padding: var(--space-xl) var(--space-md);
-  }
-  .content {
-    padding: var(--space-lg) var(--space-md) var(--space-2xl);
-  }
-  .masonryGrid {
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .mosaic {
     column-count: 2;
-    column-gap: var(--space-sm);
-  }
-  .masonryItemLink {
-    margin-bottom: var(--space-sm);
-  }
-  .overlay {
-    opacity: 1; /* Always show overlay on mobile since hover isn't reliable */
-    background: linear-gradient(to top, rgba(26,25,22,0.8), transparent);
-    padding: var(--space-sm);
   }
 }
 
-@media (max-width: 480px) {
-  .masonryGrid {
+@media (max-width: 600px) {
+  .hero {
+    padding: 60px 0 32px;
+  }
+
+  .mosaic {
     column-count: 1;
   }
 }

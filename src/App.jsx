@@ -7,7 +7,12 @@ import WritingPage from './pages/Writing';
 import PostDetail from './pages/PostDetail/PostDetail';
 import AdventurePage from './pages/Adventure';
 import AdventureDetail from './pages/AdventureDetail/AdventureDetail';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import NotFound from './pages/NotFound';
 import Footer from './components/Footer/Footer';
+import ScrollToTop from './components/ScrollToTop';
+import { MoodProvider } from './context/MoodContext';
 
 // Sanity Studio
 import { Studio } from 'sanity';
@@ -18,7 +23,7 @@ function Layout() {
   const isStudio = location.pathname.startsWith('/studio');
 
   return (
-    <>
+    <div className={!isStudio ? "wrap" : ""}>
       {!isStudio && <Navbar />}
       <main key={location.pathname}>
         <Routes location={location}>
@@ -29,18 +34,24 @@ function Layout() {
           <Route path="/writing/:slug" element={<PostDetail />} />
           <Route path="/adventure" element={<AdventurePage />} />
           <Route path="/adventure/:slug" element={<AdventureDetail />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/studio/*" element={<Studio config={config} />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       {!isStudio && <Footer />}
-    </>
+    </div>
   );
 }
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Layout />
-    </BrowserRouter>
+    <MoodProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <Layout />
+      </BrowserRouter>
+    </MoodProvider>
   );
 }

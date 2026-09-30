@@ -1,6 +1,10 @@
+/* ===========================================
+   AdventureDetail — Editorial Media View
+   =========================================== */
+
 .container {
   width: 100%;
-  padding-bottom: var(--space-3xl);
+  padding: 40px 0 100px;
 }
 
 .loading, .empty {
@@ -8,123 +12,122 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-body);
-  color: var(--ink-light);
+  font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
   font-size: 1.25rem;
+  color: var(--mid);
+}
+
+.topNav {
+  margin-bottom: 32px;
+}
+
+.backLinkTop {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  color: var(--mid);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.15s ease;
+}
+
+.backLinkTop:hover {
+  color: var(--ink);
 }
 
 .mediaWrapper {
   width: 100%;
-  background: var(--paper-dark);
+  border: 1px solid var(--line);
+  background: var(--paper);
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  margin-bottom: 40px;
 }
 
 .image, .video {
   width: 100%;
-  max-height: 80vh;
-  object-fit: cover;
+  max-height: 75vh;
+  object-fit: contain;
   display: block;
+}
+
+.content {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.header {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 24px;
+}
+
+.location {
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(28px, 4.5vw, 42px);
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+
+.pin {
+  font-style: normal;
+  margin-right: 6px;
+}
+
+.date {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  color: var(--mid);
+}
+
+.caption {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  color: var(--ink);
+  line-height: 1.6;
+  margin-bottom: 24px;
 }
 
 .hashtags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-xs);
-  margin-top: var(--space-lg);
+  gap: 8px;
+  margin-bottom: 48px;
 }
 
 .hashtagPill {
   padding: 4px 12px;
-  background: var(--ink);
-  color: var(--acid);
-  border-radius: 100px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  font-family: var(--font-heading);
-}
-
-.content {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--space-xl) var(--space-lg) 0;
-  text-align: center;
-}
-
-.header {
-  margin-bottom: var(--space-md);
-}
-
-.location {
-  font-family: var(--font-heading);
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: var(--space-xs);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
-}
-
-.pin {
-  font-size: 2.5rem;
-}
-
-.date {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1.25rem;
-  color: var(--ink-light);
-}
-
-.caption {
-  font-style: italic;
-  font-size: 1.25rem;
-  color: var(--ink);
-  line-height: 1.6;
-  margin-top: var(--space-lg);
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--mid);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .footer {
-  margin-top: var(--space-2xl);
-  padding-top: var(--space-xl);
-  border-top: var(--border-light);
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
 }
 
 .backLink {
-  color: var(--terracotta);
-  font-weight: 700;
-  font-family: var(--font-heading);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  color: var(--ink);
   text-decoration: none;
-  font-size: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.15s ease;
 }
 
 .backLink:hover {
-  opacity: 0.8;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .location {
-    font-size: 2rem;
-  }
-  
-  .pin {
-    font-size: 1.5rem;
-  }
-  
-  .image {
-    max-height: 50vh;
-  }
-  
-  .content {
-    padding-top: var(--space-lg);
-  }
+  opacity: 0.65;
 }

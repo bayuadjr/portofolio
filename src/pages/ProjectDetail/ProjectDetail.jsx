@@ -30,6 +30,10 @@ export default function ProjectDetail() {
 
   return (
     <article className={styles.container}>
+      <div className={styles.topNav}>
+        <Link to="/work" className={styles.backLinkTop}>← Back to Work</Link>
+      </div>
+
       {project.coverImage && (
         <div className={styles.coverWrapper}>
           <img
@@ -42,26 +46,22 @@ export default function ProjectDetail() {
 
       <div className={styles.content}>
         <header className={styles.header}>
-          <div className={styles.headerLeft}>
-            <div className={styles.typeRow}>
-              {project.projectType && <span className={styles.typeBadge}>{project.projectType}</span>}
-              <span className={styles.year}>{project.year}</span>
-            </div>
-            <h1 className={styles.title}>{project.title}</h1>
+          <div className={styles.typeRow}>
+            {project.projectType && <span className={styles.typeBadge}>{project.projectType}</span>}
+            {project.year && <span className={styles.year}>{project.year}</span>}
+          </div>
+          <h1 className={styles.title}>{project.title}</h1>
+          {project.summary && <p className={styles.summary}>{project.summary}</p>}
+          {project.tag && (
             <div className={styles.meta}>
-              {project.tag && project.tag.map(t => (
+              {project.tag.map(t => (
                 <span key={t} className={styles.tag}>{t}</span>
               ))}
             </div>
-          </div>
-          <div className={styles.headerRight}>
-            {project.summary && <p className={styles.summary}>{project.summary}</p>}
-          </div>
+          )}
         </header>
 
-        <hr className={styles.divider} />
-
-        {/* WEBSITE & ML-MODEL & BRAND types — add preview section */}
+        {/* WEBSITE & ML-MODEL & BRAND types — preview section */}
         {['website', 'ml-model', 'brand', 'other'].includes(project.projectType) && (
           <div className={styles.previewSection}>
             {project.previewVideo && (
@@ -113,4 +113,3 @@ export default function ProjectDetail() {
     </article>
   );
 }
-

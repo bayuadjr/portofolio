@@ -29,9 +29,13 @@ export default function AdventureDetail() {
 
   return (
     <article className={styles.container}>
+      <div className={styles.topNav}>
+        <Link to="/adventure" className={styles.backLinkTop}>← Back to Beyond</Link>
+      </div>
+
       <div className={styles.mediaWrapper}>
         {glimpse.mediaType === 'video' && glimpse.videoUrl ? (
-          <video autoPlay muted loop playsInline className={styles.video}>
+          <video autoPlay muted loop playsInline controls className={styles.video}>
             <source src={glimpse.videoUrl} type="video/mp4" />
           </video>
         ) : glimpse.image ? (
@@ -47,12 +51,12 @@ export default function AdventureDetail() {
         <header className={styles.header}>
           {glimpse.location && (
             <h1 className={styles.location}>
-              <span className={styles.pin}>📍</span> {glimpse.location}
+              <span className={styles.pin}>📍</span>{glimpse.location}
             </h1>
           )}
           {glimpse.date && (
             <div className={styles.date}>
-              {new Date(glimpse.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+              {new Date(glimpse.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
             </div>
           )}
         </header>
@@ -70,10 +74,9 @@ export default function AdventureDetail() {
         )}
 
         <div className={styles.footer}>
-          <Link to="/adventure" className={styles.backLink}>← Back to Glimpses</Link>
+          <Link to="/adventure" className={styles.backLink}>← Back to Beyond</Link>
         </div>
       </div>
     </article>
   );
 }
-

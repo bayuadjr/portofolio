@@ -4,12 +4,6 @@ import { client } from '../sanity/client';
 
 import styles from './Writing.module.css';
 
-const tagClassMap = {
-  terracotta: styles.tagTerracotta,
-  sky: styles.tagSky,
-  acid: styles.tagAcid,
-};
-
 export default function WritingPage() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,35 +69,42 @@ export default function WritingPage() {
           <div className={styles.emptyState}>Loading posts...</div>
         ) : filteredPosts.length > 0 ? (
           <div className={styles.list}>
-            {filteredPosts.map((post) => (
-              <Link to={`/writing/${post.slug?.current || post._id}`} className={styles.itemLink} key={post._id}>
-                <article className={styles.item}>
-                  <div className={styles.itemMeta}>
-                    <span className={styles.itemDate}>
-                      {post.date ? new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}
-                    </span>
+            {filteredPosts.map((post) => {
+              const tagText = Array.isArray(post.tag) ? post.tag.join(' · ') : post.tag || '';
+              const dateText = post.date
+                ? new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+                : '';
+
+              return (
+                <Link
+                  to={`/writing/${post.slug?.current || post._id}`}
+                  className={styles.row}
+                  key={post._id}
+                >
+                  <div className={styles.rowMetaLeft}>
+                    {dateText && <span className={styles.rowDate}>{dateText}</span>}
                     {post.readingTime && (
                       <span className={styles.readingTime}>{post.readingTime} min read</span>
                     )}
                   </div>
-                  <div className={styles.itemContent}>
-                    <h2 className={styles.itemTitle}>{post.title}</h2>
-                    <p className={styles.itemSummary}>{post.summary || 'Click to read more.'}</p>
+
+                  <div className={styles.rowMain}>
+                    <h2 className={styles.rowTitle}>{post.title}</h2>
+                    <p className={styles.rowSummary}>{post.summary || 'Click to read more.'}</p>
                   </div>
-                  <span
-                    className={`${styles.itemTag} ${tagClassMap[post.tagColor] || ''}`}
-                  >
-                    {Array.isArray(post.tag) ? post.tag[0] : post.tag}
-                  </span>
-                </article>
-              </Link>
-            ))}
+
+                  <div className={styles.rowMetaRight}>
+                    {tagText && <span className={styles.rowTag}>{tagText}</span>}
+                    <span className={styles.arrow} aria-hidden="true">→</span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         ) : (
           <div className={styles.emptyState}>Nothing here yet — check back soon.</div>
         )}
       </section>
-      
     </>
   );
 }

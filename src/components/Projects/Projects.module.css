@@ -35,7 +35,7 @@
 /* ── Cards Grid ──────────────────────────────────────────────── */
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(var(--cols, 3), 1fr);
   gap: 0;
   border-top: var(--border);
   border-left: var(--border);

@@ -30,6 +30,10 @@ export default function PostDetail() {
 
   return (
     <article className={styles.container}>
+      <div className={styles.topNav}>
+        <Link to="/writing" className={styles.backLinkTop}>← Back to Writing</Link>
+      </div>
+
       {post.coverImage && (
         <div className={styles.coverWrapper}>
           <img
@@ -57,8 +61,6 @@ export default function PostDetail() {
             ))}
           </div>
         </header>
-
-        <hr className={styles.divider} />
 
         <div className={styles.body}>
           {post.body ? (

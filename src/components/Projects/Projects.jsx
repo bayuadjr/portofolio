@@ -1,55 +1,53 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { client } from '../../sanity/client';
-import styles from './Projects.module.css';
+import fallbackProjects from '../../data/projects';
 
 export default function Projects({ limit = 3 }) {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState(fallbackProjects);
 
   useEffect(() => {
     client
-      .fetch(`*[_type == "project"] | order(num asc) [0...${limit}]`)
+      .fetch('*[_type == "project"] | order(num asc)')
       .then((data) => {
-        setProjects(data);
-        setLoading(false);
+        if (data && data.length > 0) {
+          setProjects(data);
+        }
       })
-      .catch(console.error);
-  }, [limit]);
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
+  const displayedProjects = projects.slice(0, limit);
 
   return (
-    <section className={styles.section} id="projects">
-      <div className={styles.header}>
-        <h2 className={styles.title}>Projects</h2>
-        <Link to="/work" className={styles.viewAll}>
-          View all →
-        </Link>
+    <section className="threads" id="projects">
+      <div className="threads-head">
+        <div className="intro-label">Work areas</div>
+        <div>
+          <p style={{ fontSize: '17px', color: 'var(--mid)', maxWidth: '560px', lineHeight: '1.6' }}>
+            Three intersecting paths: applied social research, information detection tools, and data science skill development.
+          </p>
+        </div>
       </div>
 
-      <div className={styles.grid}>
-        {loading ? (
-          <p>Loading projects...</p>
-        ) : projects.length > 0 ? (
-          projects.map((project) => (
-            <Link to={`/work/${project.slug?.current || project._id}`} className={styles.cardLink} key={project._id || project.num}>
-              <article className={styles.card}>
-                <div className={styles.cardTop}>
-                  <span className={styles.cardNum}>{project.num} —</span>
-                  <h3 className={styles.cardTitle}>{project.title}</h3>
-                  <p className={styles.cardDesc}>{project.summary || project.desc}</p>
-                </div>
-                <div className={styles.cardFooter}>
-                  <span className={styles.cardTag}>
-                    {Array.isArray(project.tag) ? project.tag[0] : project.tag}
-                  </span>
-                  <span className={styles.arrowCircle}>→</span>
-                </div>
-              </article>
-            </Link>
-          ))
-        ) : (
-          <p>No projects found.</p>
-        )}
+      <div className="threads-list">
+        {displayedProjects.map((project) => (
+          <Link
+            to={project.slug?.current ? `/work/${project.slug.current}` : '/work'}
+            className="thread-row"
+            key={project._id || project.num || project.title}
+          >
+            <div>
+              <h3>{project.title}</h3>
+              <p>{project.summary || project.desc}</p>
+            </div>
+            <span className="tag">
+              {Array.isArray(project.tag) ? project.tag.join(' · ') : project.tag}
+            </span>
+          </Link>
+        ))}
       </div>
     </section>
   );

@@ -48,10 +48,10 @@ export default function AdventurePage() {
     <>
       <section className={styles.hero}>
         <h1 className={styles.heroTitle}>
-          Glimpses<span className={styles.accent}>.</span>
+          Beyond<span className={styles.accent}>.</span>
         </h1>
         <p className={styles.heroDesc}>
-          Fieldwork, travel, campus life — moments captured between datasets and deadlines.
+          Beyond research and code — photography, visual notes, and other things that sharpen how I observe my surroundings.
         </p>
       </section>
 
@@ -61,6 +61,7 @@ export default function AdventurePage() {
             {hashtags.map(tag => (
               <button
                 key={tag}
+                type="button"
                 className={`${styles.filterBtn} ${activeFilter === tag ? styles.active : ''}`}
                 onClick={() => handleFilter(tag)}
               >
@@ -73,37 +74,41 @@ export default function AdventurePage() {
         {loading ? (
           <div className={styles.emptyState}>Loading glimpses...</div>
         ) : filteredGlimpses.length > 0 ? (
-          <div className={styles.masonryGrid}>
+          <div className={styles.mosaic}>
             {filteredGlimpses.map((item) => (
-              <Link to={`/adventure/${item.slug?.current || item._id}`} key={item._id} className={styles.masonryItemLink}>
-                <div className={styles.masonryItem}>
+              <Link
+                to={`/adventure/${item.slug?.current || item._id}`}
+                key={item._id}
+                className={styles.itemLink}
+              >
+                <article className={styles.card}>
                   {item.mediaType === 'video' && item.videoUrl ? (
                     <video autoPlay muted loop playsInline className={styles.video}>
                       <source src={item.videoUrl} type="video/mp4" />
                     </video>
                   ) : item.image ? (
                     <img
-                      src={urlFor(item.image).width(600).url()}
+                      src={urlFor(item.image).width(700).url()}
                       alt={item.location || item.title || 'Glimpse'}
                       className={styles.image}
+                      loading="lazy"
                     />
-                  ) : (
-                    <div className={`${styles.imagePlaceholder} ${styles[item.colorClass] || ''}`} />
+                  ) : null}
+
+                  {(item.caption || item.location || (item.hashtags && item.hashtags.length > 0)) && (
+                    <div className={styles.captionBox}>
+                      {item.location && <span className={styles.location}>{item.location}</span>}
+                      {item.caption && <p className={styles.caption}>{item.caption}</p>}
+                      {item.hashtags && item.hashtags.length > 0 && (
+                        <div className={styles.tagRow}>
+                          {item.hashtags.map(tag => (
+                            <span key={tag} className={styles.tag}>#{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   )}
-                  
-                  <div className={styles.overlay}>
-                    {item.location && <span className={styles.location}>📍 {item.location}</span>}
-                    {item.caption && <p className={styles.caption}>{item.caption}</p>}
-                    
-                    {item.hashtags && item.hashtags.length > 0 && (
-                      <div className={styles.tagOverlay}>
-                        {item.hashtags.map(tag => (
-                          <span key={tag} className={styles.smallTag}>#{tag}</span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                </article>
               </Link>
             ))}
           </div>
@@ -114,4 +119,3 @@ export default function AdventurePage() {
     </>
   );
 }
-

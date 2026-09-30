@@ -1,61 +1,72 @@
+/* ===========================================
+   PortableText — Editorial Typography System
+   =========================================== */
+
 .container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  font-family: var(--font-dm-sans, 'DM Sans', sans-serif);
-  color: var(--color-ink, #0f0f0f);
-  line-height: 1.6;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--ink);
+  line-height: 1.75;
 }
 
 .p {
-  font-size: 1.125rem;
+  font-size: 1.05rem;
   margin: 0;
+  color: var(--ink);
 }
 
 .h2 {
-  font-family: var(--font-syne, 'Syne', sans-serif);
-  font-size: 2rem;
-  font-weight: 800;
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
+  font-size: 1.85rem;
+  font-weight: 400;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
-  color: var(--color-ink);
+  color: var(--ink);
+  letter-spacing: -0.01em;
 }
 
 .h3 {
-  font-family: var(--font-syne, 'Syne', sans-serif);
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
+  color: var(--ink);
 }
 
 .h4 {
-  font-family: var(--font-syne, 'Syne', sans-serif);
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
   margin-top: 1rem;
   margin-bottom: 0.5rem;
+  color: var(--ink);
 }
 
 .blockquote {
-  border-left: 4px solid var(--color-terracotta, #e05e36);
+  border-left: 2px solid var(--ink);
   padding-left: 1.5rem;
-  margin: 1.5rem 0;
+  margin: 2rem 0;
+  font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
   font-size: 1.25rem;
-  color: var(--color-ink-light, #4a4a4a);
+  color: var(--mid);
+  line-height: 1.6;
 }
 
 .code {
-  font-family: monospace;
-  background-color: var(--color-paper-dark, #f0f0f0);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  background-color: var(--panel);
   padding: 0.2rem 0.4rem;
-  border-radius: 4px;
   font-size: 0.9em;
+  border: 1px solid var(--line);
 }
 
 .figure {
-  margin: 2rem 0;
+  margin: 2.5rem 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -64,15 +75,16 @@
 .image {
   max-width: 100%;
   height: auto;
-  border-radius: 8px;
+  border: 1px solid var(--line);
 }
 
 .caption {
   margin-top: 0.75rem;
   font-size: 0.875rem;
-  color: var(--color-ink-light, #4a4a4a);
+  color: var(--mid);
   text-align: center;
   font-style: italic;
+  font-family: 'Newsreader', Georgia, serif;
 }
 
 .videoWrapper {
@@ -80,6 +92,7 @@
   width: 100%;
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   height: 0;
+  border: 1px solid var(--line);
 }
 
 .videoWrapper iframe {
@@ -88,24 +101,28 @@
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 8px;
+  border: none;
 }
 
 .fileAttachment {
-  margin: 1rem 0;
+  margin: 1.5rem 0;
 }
 
 .fileAttachment a {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background-color: var(--color-terracotta, #e05e36);
-  color: var(--color-paper, #fafafa);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
   text-decoration: none;
-  border-radius: 9999px;
-  font-weight: 600;
-  transition: opacity 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.15s ease;
 }
 
 .fileAttachment a:hover {
-  opacity: 0.9;
+  background-color: var(--ink);
+  color: var(--paper);
 }

@@ -69,33 +69,39 @@ export default function Work() {
         {loading ? (
           <div className={styles.emptyState}>Loading projects...</div>
         ) : filteredProjects.length > 0 ? (
-          <div className={styles.grid}>
-            {filteredProjects.map((project) => (
-              <Link to={`/work/${project.slug?.current || project._id}`} className={styles.cardLink} key={project._id}>
-                <article className={styles.card}>
-                  {project.projectType && <span className={styles.cardType}>{project.projectType}</span>}
-                  <div className={styles.cardTop}>
-                    <span className={styles.cardNum}>{project.num} —</span>
-                    <h3 className={styles.cardTitle}>{project.title}</h3>
-                    <p className={styles.cardDesc}>{project.summary || project.desc}</p>
-                  </div>
-                  <div className={styles.cardFooter}>
-                    <span className={styles.cardTag}>
-                      {Array.isArray(project.tag) ? project.tag[0] : project.tag}
-                      {Array.isArray(project.tag) && project.tag.length > 1 && ` +${project.tag.length - 1}`}
-                    </span>
-                    <span className={styles.arrowCircle}>→</span>
-                  </div>
-                </article>
-              </Link>
+          <div className={styles.list}>
+            {filteredProjects.map((project, index) => {
+              const num = project.num || String(index + 1).padStart(2, '0');
+              const tagText = project.projectType || 
+                (Array.isArray(project.tag) ? project.tag.join(' · ') : project.tag) || '';
 
-            ))}
+              return (
+                <Link
+                  to={`/work/${project.slug?.current || project._id}`}
+                  className={styles.row}
+                  key={project._id || num}
+                >
+                  <span className={styles.rowNum}>{num}</span>
+
+                  <div className={styles.rowMain}>
+                    <h2 className={styles.rowTitle}>{project.title}</h2>
+                    {(project.summary || project.desc) && (
+                      <p className={styles.rowDesc}>{project.summary || project.desc}</p>
+                    )}
+                  </div>
+
+                  <div className={styles.rowMeta}>
+                    {tagText && <span className={styles.rowTag}>{tagText}</span>}
+                    <span className={styles.arrow} aria-hidden="true">→</span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         ) : (
           <div className={styles.emptyState}>Nothing here yet — check back soon.</div>
         )}
       </section>
-      
     </>
   );
 }
