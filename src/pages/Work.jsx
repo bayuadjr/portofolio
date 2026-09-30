@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { client } from '../sanity/client';
-
+import { client, urlFor } from '../sanity/client';
 import styles from './Work.module.css';
 
 export default function Work() {
@@ -10,22 +9,41 @@ export default function Work() {
   const [activeFilter, setActiveFilter] = useState('All');
 
   useEffect(() => {
+    // GROQ query fetching all fields: title, slug, num, year, projectType, summary, desc, coverImage, tags, tag
+    const query = `*[_type == "project"]{
+      _id,
+      num,
+      title,
+      slug,
+      projectType,
+      summary,
+      desc,
+      year,
+      coverImage,
+      tags,
+      tag
+    } | order(num asc)`;
+
     client
-      .fetch('*[_type == "project"] | order(num asc)')
+      .fetch(query)
       .then((data) => {
-        setProjects(data);
+        setProjects(data || []);
         setLoading(false);
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error('Failed to fetch projects from Sanity:', err);
+        setLoading(false);
+      });
   }, []);
 
   const uniqueTags = useMemo(() => {
     const tags = new Set();
-    projects.forEach(p => {
-      if (Array.isArray(p.tag)) {
-        p.tag.forEach(t => tags.add(t));
-      } else if (p.tag) {
-        tags.add(p.tag); // fallback for old string tags
+    projects.forEach((p) => {
+      const itemTags = p.tags || p.tag;
+      if (Array.isArray(itemTags)) {
+        itemTags.forEach((t) => tags.add(t));
+      } else if (itemTags) {
+        tags.add(itemTags);
       }
     });
     return ['All', ...Array.from(tags).sort()];
@@ -33,11 +51,14 @@ export default function Work() {
 
   const filteredProjects = useMemo(() => {
     if (activeFilter === 'All') return projects;
-    return projects.filter(p => {
-      if (Array.isArray(p.tag)) {
-        return p.tag.includes(activeFilter);
+    return projects.filter((p) => {
+      const itemTags = p.tags || p.tag;
+      const type = p.projectType;
+      if (type && type.toLowerCase() === activeFilter.toLowerCase()) return true;
+      if (Array.isArray(itemTags)) {
+        return itemTags.some((t) => t.toLowerCase() === activeFilter.toLowerCase());
       }
-      return p.tag === activeFilter;
+      return itemTags && itemTags.toLowerCase() === activeFilter.toLowerCase();
     });
   }, [projects, activeFilter]);
 
@@ -55,7 +76,7 @@ export default function Work() {
 
       <section className={styles.content}>
         <div className={styles.filterBar}>
-          {uniqueTags.map(tag => (
+          {uniqueTags.map((tag) => (
             <button
               key={tag}
               className={`${styles.filterBtn} ${activeFilter === tag ? styles.active : ''}`}
@@ -69,30 +90,78 @@ export default function Work() {
         {loading ? (
           <div className={styles.emptyState}>Loading projects...</div>
         ) : filteredProjects.length > 0 ? (
-          <div className={styles.list}>
+          <div className={styles.grid}>
             {filteredProjects.map((project, index) => {
               const num = project.num || String(index + 1).padStart(2, '0');
-              const tagText = project.projectType || 
-                (Array.isArray(project.tag) ? project.tag.join(' · ') : project.tag) || '';
+              const slug = project.slug?.current || project.slug || project._id;
+              const projectType = project.projectType || 'Project';
+              const rawTags = project.tags || project.tag;
+              const tags = Array.isArray(rawTags)
+                ? rawTags
+                : rawTags
+                  ? [rawTags]
+                  : [];
+
+              const isPaperOrResearch = /paper|research|fieldwork|study|etnografi|anthropology/i.test(
+                projectType
+              );
+              const actionLabel = isPaperOrResearch ? 'Read Study →' : 'View Project →';
 
               return (
                 <Link
-                  to={`/work/${project.slug?.current || project._id}`}
-                  className={styles.row}
+                  to={`/work/${slug}`}
+                  className={styles.card}
                   key={project._id || num}
                 >
-                  <span className={styles.rowNum}>{num}</span>
-
-                  <div className={styles.rowMain}>
-                    <h2 className={styles.rowTitle}>{project.title}</h2>
-                    {(project.summary || project.desc) && (
-                      <p className={styles.rowDesc}>{project.summary || project.desc}</p>
+                  {/* Media Container: 16:9 ratio with coverImage or subtle fallback */}
+                  <div className={styles.cardMedia}>
+                    {project.coverImage ? (
+                      <img
+                        src={urlFor(project.coverImage)
+                          .width(800)
+                          .height(450)
+                          .fit('crop')
+                          .auto('format')
+                          .url()}
+                        alt={project.title}
+                        className={styles.cardImg}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className={styles.cardFallback}>
+                        <div className={styles.fallbackPattern} aria-hidden="true" />
+                        <span className={styles.fallbackType}>{projectType}</span>
+                      </div>
                     )}
+                    <span className={styles.typeBadge}>{projectType}</span>
                   </div>
 
-                  <div className={styles.rowMeta}>
-                    {tagText && <span className={styles.rowTag}>{tagText}</span>}
-                    <span className={styles.arrow} aria-hidden="true">→</span>
+                  {/* Card Body using Flexbox with margin-top: auto for aligned footer */}
+                  <div className={styles.cardBody}>
+                    <div className={styles.cardMetaTop}>
+                      <span className={styles.cardNum}>{num}</span>
+                      {project.year && <span className={styles.cardYear}>{project.year}</span>}
+                    </div>
+
+                    <h2 className={styles.cardTitle}>{project.title}</h2>
+
+                    {(project.summary || project.desc) && (
+                      <p className={styles.cardDesc}>{project.summary || project.desc}</p>
+                    )}
+
+                    {/* Card Footer pinned to the bottom via margin-top: auto */}
+                    <div className={styles.cardFooter}>
+                      <div className={styles.cardTags}>
+                        {tags.slice(0, 3).map((t) => (
+                          <span key={t} className={styles.tagBadge}>
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                      <span className={styles.actionLink}>
+                        {actionLabel}
+                      </span>
+                    </div>
                   </div>
                 </Link>
               );
@@ -105,3 +174,4 @@ export default function Work() {
     </>
   );
 }
+
