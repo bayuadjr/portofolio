@@ -2,9 +2,10 @@ export default function About() {
   return (
     <>
       <section className="page-head">
+        <p className="page-eyebrow">Background</p>
         <h1>About</h1>
         <p>
-          what can we learn about people when we change the way we look at them?
+          What can we learn about people when we change the way we look at them?
         </p>
       </section>
 

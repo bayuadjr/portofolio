@@ -3,8 +3,8 @@ import { structureTool } from 'sanity/structure';
 import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './src/sanity/schemaTypes';
 
-const projectId = import.meta.env.VITE_SANITY_PROJECT_ID || 'your-project-id';
-const dataset = import.meta.env.VITE_SANITY_DATASET || 'production';
+const projectId = import.meta.env?.VITE_SANITY_PROJECT_ID || 'ee61qwkf';
+const dataset = import.meta.env?.VITE_SANITY_DATASET || 'production';
 
 export default defineConfig({
   name: 'default',
@@ -15,7 +15,7 @@ export default defineConfig({
 
   basePath: '/studio',
 
-  plugins: [structureTool(), visionTool()],
+  plugins: [structureTool(), ...(import.meta.env?.DEV ? [visionTool()] : [])],
 
   schema: {
     types: schemaTypes,

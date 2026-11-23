@@ -1,4 +1,4 @@
-import { useMood } from '../../context/MoodContext';
+import { useMood } from '../../context/useMood';
 import styles from './MoodSwitcher.module.css';
 
 const CARDS_DATA = [

@@ -1,17 +1,23 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-
-const MoodContext = createContext();
+import { useState, useEffect } from 'react';
+import { MoodContext } from './useMood';
 
 export function MoodProvider({ children }) {
   const [mood, setMood] = useState(() => {
-    // Default to 'joker' if not stored
-    return localStorage.getItem('bayu-portfolio-mood') || 'joker';
+    try {
+      return localStorage.getItem('bayu-portfolio-mood') || 'joker';
+    } catch {
+      return 'joker';
+    }
   });
 
   useEffect(() => {
     // Apply data-mood to html element so CSS selectors can style based on active mood
     document.documentElement.setAttribute('data-mood', mood);
-    localStorage.setItem('bayu-portfolio-mood', mood);
+    try {
+      localStorage.setItem('bayu-portfolio-mood', mood);
+    } catch {
+      // Ignore storage write errors in restricted browsing contexts.
+    }
   }, [mood]);
 
   return (
@@ -19,12 +25,4 @@ export function MoodProvider({ children }) {
       {children}
     </MoodContext.Provider>
   );
-}
-
-export function useMood() {
-  const context = useContext(MoodContext);
-  if (!context) {
-    throw new Error('useMood must be used within a MoodProvider');
-  }
-  return context;
 }

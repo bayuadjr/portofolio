@@ -3,18 +3,29 @@
    =========================================== */
 
 .hero {
-  padding: 80px 0 40px;
+  padding: 80px 0 44px;
   border-bottom: 1px solid var(--line);
 }
 
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--mid);
+  margin-bottom: 14px;
+}
+
 .heroTitle {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-weight: 700;
-  font-size: clamp(40px, 6vw, 64px);
-  letter-spacing: -0.02em;
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(42px, 6vw, 68px);
+  letter-spacing: -0.015em;
   color: var(--ink);
-  margin-bottom: 16px;
-  line-height: 1.1;
+  margin-bottom: 18px;
+  line-height: 1.08;
 }
 
 .accent {
@@ -22,13 +33,13 @@
 }
 
 .heroDesc {
-  font-family: 'Newsreader', Georgia, serif;
-  font-style: italic;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-style: normal;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 17px;
   color: var(--mid);
-  max-width: 600px;
-  line-height: 1.6;
+  max-width: 580px;
+  line-height: 1.65;
 }
 
 .content {

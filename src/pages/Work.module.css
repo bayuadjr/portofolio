@@ -1,20 +1,31 @@
 /* ===========================================
-   Work Page — Visual Grid Card Layout
+   Work Page — Strict-Monochrome Editorial Showcase & Grid
    =========================================== */
 
 .hero {
-  padding: 80px 0 40px;
+  padding: 80px 0 44px;
   border-bottom: 1px solid var(--line);
 }
 
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--mid);
+  margin-bottom: 14px;
+}
+
 .heroTitle {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-weight: 700;
-  font-size: clamp(40px, 6vw, 64px);
-  letter-spacing: -0.02em;
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(42px, 6vw, 68px);
+  letter-spacing: -0.015em;
   color: var(--ink);
-  margin-bottom: 16px;
-  line-height: 1.1;
+  margin-bottom: 18px;
+  line-height: 1.08;
 }
 
 .accent {
@@ -22,13 +33,12 @@
 }
 
 .heroDesc {
-  font-family: 'Newsreader', Georgia, serif;
-  font-style: italic;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 17px;
   color: var(--mid);
-  max-width: 600px;
-  line-height: 1.6;
+  max-width: 580px;
+  line-height: 1.65;
 }
 
 .content {
@@ -40,21 +50,21 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  padding: 32px 0;
+  padding: 28px 0;
   border-bottom: 1px solid var(--line);
 }
 
 .filterBtn {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 400;
-  padding: 8px 18px;
+  padding: 7px 16px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: transparent;
   color: var(--mid);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
   line-height: 1.4;
 }
 
@@ -70,34 +80,319 @@
   border-color: var(--ink);
 }
 
-/* ---------- Responsive Grid Card Layout ---------- */
+/* ---------- Showcase Wrapper ---------- */
+.showcase {
+  padding-top: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ---------- Featured Hero Card ---------- */
+.featuredCard {
+  display: grid;
+  grid-template-columns: 1.25fr 0.95fr;
+  gap: 32px;
+  background: var(--surface);
+  border: 1px solid var(--ink);
+  padding: 32px;
+}
+
+.featuredMain {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.featuredMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.featuredNum {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--subtle);
+  letter-spacing: 0.04em;
+}
+
+.featuredPill,
+.livePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.featuredPill {
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+}
+
+.livePill {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink);
+  display: inline-block;
+}
+
+.metaType,
+.metaYear {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--mid);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.metaYear {
+  margin-left: auto;
+}
+
+.featuredTitle {
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(28px, 3.6vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.featuredTitleLink {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.featuredTitleLink:hover {
+  opacity: 0.72;
+}
+
+.featuredDesc {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15.5px;
+  color: var(--mid);
+  line-height: 1.65;
+  margin-bottom: 24px;
+  max-width: 560px;
+}
+
+.highlightsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.highlightItem {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.highlightNum {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--subtle);
+}
+
+.highlightLabel {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.featuredActions {
+  margin-top: auto;
+  padding-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.primaryBtn,
+.secondaryBtn,
+.ghostBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.primaryBtn {
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+}
+
+.primaryBtn:hover {
+  background: var(--ink-soft);
+  border-color: var(--ink-soft);
+}
+
+.secondaryBtn {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+}
+
+.secondaryBtn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.ghostBtn {
+  background: transparent;
+  color: var(--mid);
+  border: 1px solid var(--line);
+}
+
+.ghostBtn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+/* ---------- Featured Aside (Cover or Editorial Specimen + Demo Sandbox) ---------- */
+.featuredAside {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+}
+
+.featuredMedia {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.featuredImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.specimenBox {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.specimenHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mid);
+}
+
+.specimenLedger {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.specimenRow {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: baseline;
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px dashed var(--line);
+}
+
+.specimenRow:first-child {
+  border-top: none;
+  padding-top: 2px;
+}
+
+.specimenRow:last-child {
+  padding-bottom: 2px;
+}
+
+.specimenIndex {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--subtle);
+}
+
+.specimenName {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.specimenStatus {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mid);
+}
+
+/* ---------- 2-Column Project Grid ---------- */
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 32px;
-  padding-top: 40px;
+  gap: 24px;
 }
 
 .card {
   display: flex;
   flex-direction: column;
-  background: var(--panel);
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow: hidden;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .card:hover {
   border-color: var(--ink);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.08);
 }
 
-/* ---------- Card Media (16:9 ratio) ---------- */
 .cardMedia {
+  display: block;
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -110,68 +405,69 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.35s ease;
+  display: block;
+  transition: transform 0.3s ease;
 }
 
 .card:hover .cardImg {
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
 
-/* Fallback state when coverImage is missing */
-.cardFallback {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--paper) 0%, var(--panel) 100%);
-  padding: 24px;
-}
-
-.fallbackPattern {
-  position: absolute;
-  inset: 0;
-  opacity: 0.08;
-  background-image: radial-gradient(var(--ink) 1px, transparent 1px);
-  background-size: 16px 16px;
-}
-
-.fallbackType {
-  position: relative;
-  font-family: 'Newsreader', Georgia, serif;
-  font-style: italic;
-  font-size: 22px;
-  color: var(--mid);
-  opacity: 0.6;
-}
-
-/* Pill badge on top right of the media */
 .typeBadge {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  padding: 4px 12px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 11px;
-  font-weight: 600;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 999px;
   color: var(--ink);
-  z-index: 2;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
-/* ---------- Card Body (Flexbox with margin-top: auto on footer) ---------- */
+/* Compact editorial index header when no cover image is set */
+.cardNoMediaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  text-decoration: none;
+  color: inherit;
+}
+
+.cardBigNum {
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.cardHeaderMeta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.typeLabel {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mid);
+}
+
+/* ---------- Card Body ---------- */
 .cardBody {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 24px 28px 22px;
+  padding: 22px 24px 20px;
 }
 
 .cardMetaTop {
@@ -179,19 +475,20 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 12px;
-  font-weight: 500;
+  font-family: var(--mono);
+  font-size: 11px;
   color: var(--mid);
   letter-spacing: 0.04em;
 }
 
 .cardNum {
-  opacity: 0.7;
+  color: var(--subtle);
 }
 
 .cardYear {
-  opacity: 0.8;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--subtle);
 }
 
 .cardTitle {
@@ -204,26 +501,37 @@
   margin-bottom: 10px;
 }
 
+.cardTitleLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cardTitleLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 .cardDesc {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 14px;
   font-weight: 400;
   color: var(--mid);
   line-height: 1.6;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* ---------- Card Footer (Pinned to bottom for perfect alignment) ---------- */
+/* ---------- Card Footer ---------- */
 .cardFooter {
   margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
   padding-top: 16px;
   border-top: 1px dashed var(--line);
 }
@@ -235,28 +543,51 @@
 }
 
 .tagBadge {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--mono);
   font-size: 11px;
-  font-weight: 500;
   padding: 3px 8px;
-  border-radius: 4px;
-  background: var(--paper);
   border: 1px solid var(--line);
+  background: var(--paper);
   color: var(--mid);
   line-height: 1.3;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.quickLiveLink {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 9px;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.quickLiveLink:hover {
+  background: var(--ink);
+  color: var(--paper);
 }
 
 .actionLink {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ink);
+  text-decoration: none;
   white-space: nowrap;
-  margin-left: auto;
   transition: transform 0.15s ease;
 }
 
-.card:hover .actionLink {
+.actionLink:hover {
   transform: translateX(3px);
 }
 
@@ -269,14 +600,22 @@
   color: var(--mid);
 }
 
-/* ---------- Responsive (Mobile < 768px) ---------- */
-@media (max-width: 768px) {
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+  .featuredCard {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 720px) {
   .hero {
-    padding: 60px 0 32px;
+    padding: 60px 0 36px;
   }
 
   .filterBar {
-    padding: 24px 0;
+    padding: 22px 0;
     gap: 6px;
   }
 
@@ -285,27 +624,44 @@
     font-size: 13px;
   }
 
+  .showcase {
+    padding-top: 28px;
+    gap: 24px;
+  }
+
+  .featuredCard {
+    padding: 20px;
+  }
+
+  .highlightsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .featuredActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primaryBtn,
+  .secondaryBtn,
+  .ghostBtn {
+    justify-content: center;
+  }
+
   .grid {
     grid-template-columns: 1fr;
-    gap: 24px;
-    padding-top: 28px;
+    gap: 20px;
+  }
+
+  .cardNoMediaHeader {
+    padding: 18px 20px 14px;
   }
 
   .cardBody {
-    padding: 20px 20px 18px;
+    padding: 18px 20px;
   }
 
   .cardTitle {
     font-size: 18px;
   }
-
-  .cardDesc {
-    font-size: 13.5px;
-    margin-bottom: 20px;
-  }
-
-  .cardFooter {
-    gap: 12px;
-  }
 }
-

@@ -6,27 +6,48 @@ import styles from './PostDetail.module.css';
 
 export default function PostDetail() {
   const { slug } = useParams();
-  const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState({ slug: null, post: null });
+
+  const loading = state.slug !== slug;
+  const post = state.slug === slug ? state.post : null;
 
   useEffect(() => {
+    let cancelled = false;
+
     const fetchPost = async () => {
       try {
-        const query = `*[_type == "post" && slug.current == $slug][0]`;
+        const query = `*[_type == "post" && (slug.current == $slug || _id == $slug)][0]{
+          ...,
+          body[]{
+            ...,
+            _type == "fileAttachment" => {
+              ...,
+              asset->
+            }
+          }
+        }`;
         const data = await client.fetch(query, { slug });
-        setPost(data);
+        if (!cancelled) {
+          setState({ slug, post: data || null });
+        }
       } catch (error) {
-        console.error("Failed to fetch post:", error);
-      } finally {
-        setLoading(false);
+        console.error('Failed to fetch post:', error);
+        if (!cancelled) {
+          setState({ slug, post: null });
+        }
       }
     };
 
     fetchPost();
+    return () => {
+      cancelled = true;
+    };
   }, [slug]);
 
   if (loading) return <div className={styles.loading}>Loading...</div>;
   if (!post) return <div className={styles.empty}>Post not found.</div>;
+
+  const tags = Array.isArray(post.tag) ? post.tag : post.tag ? [post.tag] : [];
 
   return (
     <article className={styles.container}>
@@ -34,10 +55,10 @@ export default function PostDetail() {
         <Link to="/writing" className={styles.backLinkTop}>← Back to Writing</Link>
       </div>
 
-      {post.coverImage && (
+      {post.coverImage?.asset && (
         <div className={styles.coverWrapper}>
           <img
-            src={urlFor(post.coverImage).url()}
+            src={urlFor(post.coverImage).auto('format').url()}
             alt={post.title}
             className={styles.coverImage}
           />
@@ -56,7 +77,7 @@ export default function PostDetail() {
             {post.readingTime && (
               <span className={styles.readingTime}>{post.readingTime} min read</span>
             )}
-            {post.tag && post.tag.map(t => (
+            {tags.map((t) => (
               <span key={t} className={styles.tag}>{t}</span>
             ))}
           </div>

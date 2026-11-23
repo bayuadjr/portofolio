@@ -47,7 +47,8 @@ export const glimpseType = defineType({
     defineField({
       name: 'videoUrl',
       title: 'Video URL (Cloudinary)',
-      type: 'string',
+      type: 'url',
+      validation: (Rule) => Rule.uri({ scheme: ['http', 'https'] }),
       hidden: ({ parent }) => parent?.mediaType !== 'video',
     }),
     defineField({

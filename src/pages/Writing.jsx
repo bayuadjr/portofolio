@@ -10,20 +10,33 @@ export default function WritingPage() {
   const [activeFilter, setActiveFilter] = useState('All');
 
   useEffect(() => {
+    let cancelled = false;
+
     client
       .fetch('*[_type == "post"] | order(date desc)')
       .then((data) => {
-        setPosts(data);
-        setLoading(false);
+        if (!cancelled) {
+          setPosts(data || []);
+          setLoading(false);
+        }
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error('Failed to fetch posts:', err);
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const uniqueTags = useMemo(() => {
     const tags = new Set();
-    posts.forEach(p => {
+    posts.forEach((p) => {
       if (Array.isArray(p.tag)) {
-        p.tag.forEach(t => tags.add(t));
+        p.tag.forEach((t) => tags.add(t));
       } else if (p.tag) {
         tags.add(p.tag);
       }
@@ -33,7 +46,7 @@ export default function WritingPage() {
 
   const filteredPosts = useMemo(() => {
     if (activeFilter === 'All') return posts;
-    return posts.filter(p => {
+    return posts.filter((p) => {
       if (Array.isArray(p.tag)) {
         return p.tag.includes(activeFilter);
       }
@@ -44,6 +57,7 @@ export default function WritingPage() {
   return (
     <>
       <section className={styles.hero}>
+        <p className={styles.eyebrow}>Essays &amp; Field Notes</p>
         <h1 className={styles.heroTitle}>
           Writing<span className={styles.accent}>.</span>
         </h1>
@@ -54,7 +68,7 @@ export default function WritingPage() {
 
       <section className={styles.content}>
         <div className={styles.filterBar}>
-          {uniqueTags.map(tag => (
+          {uniqueTags.map((tag) => (
             <button
               key={tag}
               className={`${styles.filterBtn} ${activeFilter === tag ? styles.active : ''}`}

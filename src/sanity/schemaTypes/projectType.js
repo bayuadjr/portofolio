@@ -68,20 +68,52 @@ export const projectType = defineType({
     defineField({
       name: 'previewVideo',
       title: 'Preview Video (Cloudinary URL)',
-      type: 'string',
+      type: 'url',
       description: 'Short 5-10 second autoplay preview video',
-      hidden: ({ parent }) => parent?.projectType === 'research',
+      validation: (Rule) => Rule.uri({ scheme: ['http', 'https'] }),
     }),
     defineField({
       name: 'liveUrl',
       title: 'Live Demo URL',
-      type: 'string',
-      hidden: ({ parent }) => parent?.projectType === 'research',
+      type: 'url',
+      validation: (Rule) => Rule.uri({ scheme: ['http', 'https'] }),
     }),
     defineField({
       name: 'repoUrl',
       title: 'Repository URL (GitHub, etc)',
-      type: 'string',
+      type: 'url',
+      validation: (Rule) => Rule.uri({ scheme: ['http', 'https'] }),
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Featured Showcase',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Pin this project as the full-width featured showcase on the Work page.',
+    }),
+    defineField({
+      name: 'highlights',
+      title: 'Key Feature Highlights',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Short feature labels shown on the featured showcase card (e.g. Team Digest, Theme Detector).',
+    }),
+    defineField({
+      name: 'demoCredentials',
+      title: 'Public Demo Credentials',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'email',
+          title: 'Demo Email',
+          type: 'string',
+        }),
+        defineField({
+          name: 'password',
+          title: 'Demo Password',
+          type: 'string',
+        }),
+      ],
     }),
     defineField({
       name: 'summary',

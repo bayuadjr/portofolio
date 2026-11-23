@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styles from './Contact.module.css';
 
 const TEMPLATES = [
@@ -49,12 +49,19 @@ export default function Contact() {
   const [subject, setSubject] = useState(TEMPLATES[0].subject);
   const [message, setMessage] = useState(TEMPLATES[0].body);
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState(false);
+  const copyTimerRef = useRef(null);
+
+  useEffect(() => {
+    return () => clearTimeout(copyTimerRef.current);
+  }, []);
 
   const handleSelectTemplate = (tmpl) => {
     setActiveTemplate(tmpl.id);
     setSubject(tmpl.subject);
     setMessage(tmpl.body);
     setCopied(false);
+    setCopyError(false);
   };
 
   const handleSend = () => {
@@ -62,11 +69,35 @@ export default function Contact() {
     window.location.href = mailtoUrl;
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(message).then(() => {
+  const handleCopy = async () => {
+    clearTimeout(copyTimerRef.current);
+    setCopyError(false);
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(message);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = message;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        const copiedFallback = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        if (!copiedFallback) {
+          throw new Error('Fallback copy command failed');
+        }
+      }
       setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    });
+      copyTimerRef.current = setTimeout(() => setCopied(false), 2500);
+    } catch (err) {
+      console.error('Failed to copy message:', err);
+      setCopied(false);
+      setCopyError(true);
+      copyTimerRef.current = setTimeout(() => setCopyError(false), 3000);
+    }
   };
 
   return (
@@ -143,6 +174,11 @@ export default function Contact() {
               {copied && (
                 <span className={styles.copySuccess}>
                   Ready to paste into your email client
+                </span>
+              )}
+              {copyError && (
+                <span className={styles.copySuccess} role="status">
+                  Could not copy automatically — please copy the text manually.
                 </span>
               )}
             </div>

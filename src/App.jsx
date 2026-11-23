@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import Home from './pages/Home';
@@ -12,18 +13,15 @@ import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
 import Footer from './components/Footer/Footer';
 import ScrollToTop from './components/ScrollToTop';
-import { MoodProvider } from './context/MoodContext';
 
-// Sanity Studio
-import { Studio } from 'sanity';
-import config from '../sanity.config';
+const StudioPage = lazy(() => import('./pages/StudioPage'));
 
 function Layout() {
   const location = useLocation();
   const isStudio = location.pathname.startsWith('/studio');
 
   return (
-    <div className={!isStudio ? "wrap" : ""}>
+    <div className={!isStudio ? 'wrap' : ''}>
       {!isStudio && <Navbar />}
       <main key={location.pathname}>
         <Routes location={location}>
@@ -36,7 +34,14 @@ function Layout() {
           <Route path="/adventure/:slug" element={<AdventureDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/studio/*" element={<Studio config={config} />} />
+          <Route
+            path="/studio/*"
+            element={
+              <Suspense fallback={<div style={{ padding: '40px' }}>Loading Studio...</div>}>
+                <StudioPage />
+              </Suspense>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
@@ -47,11 +52,9 @@ function Layout() {
 
 export default function App() {
   return (
-    <MoodProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Layout />
-      </BrowserRouter>
-    </MoodProvider>
+    <BrowserRouter>
+      <ScrollToTop />
+      <Layout />
+    </BrowserRouter>
   );
 }

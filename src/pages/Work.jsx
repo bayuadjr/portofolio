@@ -1,6 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { client, urlFor } from '../sanity/client';
+import { prepareProjects, getProjectTags } from '../data/projectHelpers';
+import { sanitizeHttpUrl } from '../utils/url';
+import DemoCredentials from '../components/DemoCredentials/DemoCredentials';
 import styles from './Work.module.css';
 
 export default function Work() {
@@ -9,62 +12,207 @@ export default function Work() {
   const [activeFilter, setActiveFilter] = useState('All');
 
   useEffect(() => {
-    // GROQ query fetching all fields: title, slug, num, year, projectType, summary, desc, coverImage, tags, tag
-    const query = `*[_type == "project"]{
+    let cancelled = false;
+
+    const query = `*[_type == "project"] {
       _id,
       num,
       title,
       slug,
       projectType,
+      featured,
       summary,
       desc,
       year,
       coverImage,
+      liveUrl,
+      repoUrl,
+      highlights,
+      demoCredentials,
       tags,
-      tag
-    } | order(num asc)`;
+      tag,
+      "bodyCount": count(body)
+    }`;
 
     client
       .fetch(query)
       .then((data) => {
-        setProjects(data || []);
-        setLoading(false);
+        if (!cancelled) {
+          setProjects(prepareProjects(data || []));
+          setLoading(false);
+        }
       })
       .catch((err) => {
         console.error('Failed to fetch projects from Sanity:', err);
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const uniqueTags = useMemo(() => {
     const tags = new Set();
     projects.forEach((p) => {
-      const itemTags = p.tags || p.tag;
-      if (Array.isArray(itemTags)) {
-        itemTags.forEach((t) => tags.add(t));
-      } else if (itemTags) {
-        tags.add(itemTags);
-      }
+      getProjectTags(p).forEach((t) => tags.add(t));
     });
     return ['All', ...Array.from(tags).sort()];
   }, [projects]);
 
   const filteredProjects = useMemo(() => {
     if (activeFilter === 'All') return projects;
+    const needle = activeFilter.toLowerCase();
     return projects.filter((p) => {
-      const itemTags = p.tags || p.tag;
-      const type = p.projectType;
-      if (type && type.toLowerCase() === activeFilter.toLowerCase()) return true;
-      if (Array.isArray(itemTags)) {
-        return itemTags.some((t) => t.toLowerCase() === activeFilter.toLowerCase());
-      }
-      return itemTags && itemTags.toLowerCase() === activeFilter.toLowerCase();
+      if (p.projectType && p.projectType.toLowerCase() === needle) return true;
+      return getProjectTags(p).some((t) => t.toLowerCase() === needle);
     });
   }, [projects, activeFilter]);
+
+  const featuredProject = useMemo(
+    () => filteredProjects.find((p) => p.featured === true) || null,
+    [filteredProjects]
+  );
+
+  const gridProjects = useMemo(() => {
+    if (!featuredProject) return filteredProjects;
+    return filteredProjects.filter((p) => p !== featuredProject);
+  }, [filteredProjects, featuredProject]);
+
+  const renderFeatured = (project) => {
+    const num = project.num || '01';
+    const slug = project.slug?.current || project.slug || project._id;
+    const projectType = project.projectType || 'Web App';
+    const tags = getProjectTags(project);
+    const highlights = Array.isArray(project.highlights) ? project.highlights : [];
+    const safeLiveUrl = sanitizeHttpUrl(project.liveUrl);
+    const safeRepoUrl = sanitizeHttpUrl(project.repoUrl);
+
+    return (
+      <article className={styles.featuredCard}>
+        <div className={styles.featuredMain}>
+          <div className={styles.featuredMeta}>
+            <span className={styles.featuredNum}>{num}</span>
+            <span className={styles.featuredPill}>Featured</span>
+            {safeLiveUrl && (
+              <span className={styles.livePill}>
+                <span className={styles.liveDot} aria-hidden="true" />
+                Live Demo
+              </span>
+            )}
+            <span className={styles.metaType}>{projectType}</span>
+            {project.year && <span className={styles.metaYear}>{project.year}</span>}
+          </div>
+
+          <h2 className={styles.featuredTitle}>
+            <Link to={`/work/${slug}`} className={styles.featuredTitleLink}>
+              {project.title}
+            </Link>
+          </h2>
+
+          {(project.summary || project.desc) && (
+            <p className={styles.featuredDesc}>{project.summary || project.desc}</p>
+          )}
+
+          {highlights.length > 0 && (
+            <div className={styles.highlightsGrid}>
+              {highlights.map((item, idx) => (
+                <div className={styles.highlightItem} key={item}>
+                  <span className={styles.highlightNum}>
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                  <span className={styles.highlightLabel}>{item}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {tags.length > 0 && (
+            <div className={styles.cardTags}>
+              {tags.map((t) => (
+                <span key={t} className={styles.tagBadge}>
+                  {t}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div className={styles.featuredActions}>
+            {safeLiveUrl && (
+              <a
+                href={safeLiveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.primaryBtn}
+              >
+                Try Live Demo ↗
+              </a>
+            )}
+            <Link to={`/work/${slug}`} className={styles.secondaryBtn}>
+              Read Case Study →
+            </Link>
+            {safeRepoUrl && (
+              <a
+                href={safeRepoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.ghostBtn}
+              >
+                GitHub ↗
+              </a>
+            )}
+          </div>
+        </div>
+
+        <aside className={styles.featuredAside}>
+          {project.coverImage?.asset ? (
+            <Link to={`/work/${slug}`} className={styles.featuredMedia}>
+              <img
+                src={urlFor(project.coverImage)
+                  .width(960)
+                  .height(540)
+                  .fit('crop')
+                  .auto('format')
+                  .url()}
+                alt={project.title}
+                className={styles.featuredImg}
+              />
+            </Link>
+          ) : (
+            <div className={styles.specimenBox}>
+              <div className={styles.specimenHead}>
+                <span>{projectType}</span>
+                <span>{safeLiveUrl ? 'Live Sandbox' : 'Editorial Index'}</span>
+              </div>
+
+              {highlights.length > 0 && (
+                <ul className={styles.specimenLedger}>
+                  {highlights.map((item, idx) => (
+                    <li className={styles.specimenRow} key={item}>
+                      <span className={styles.specimenIndex}>
+                        {String(idx + 1).padStart(2, '0')}
+                      </span>
+                      <span className={styles.specimenName}>{item}</span>
+                      <span className={styles.specimenStatus}>Module</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          <DemoCredentials credentials={project.demoCredentials} compact />
+        </aside>
+      </article>
+    );
+  };
 
   return (
     <>
       <section className={styles.hero}>
+        <p className={styles.eyebrow}>Selected Projects</p>
         <h1 className={styles.heroTitle}>
           Work<span className={styles.accent}>.</span>
         </h1>
@@ -79,6 +227,7 @@ export default function Work() {
           {uniqueTags.map((tag) => (
             <button
               key={tag}
+              type="button"
               className={`${styles.filterBtn} ${activeFilter === tag ? styles.active : ''}`}
               onClick={() => setActiveFilter(tag)}
             >
@@ -90,82 +239,108 @@ export default function Work() {
         {loading ? (
           <div className={styles.emptyState}>Loading projects...</div>
         ) : filteredProjects.length > 0 ? (
-          <div className={styles.grid}>
-            {filteredProjects.map((project, index) => {
-              const num = project.num || String(index + 1).padStart(2, '0');
-              const slug = project.slug?.current || project.slug || project._id;
-              const projectType = project.projectType || 'Project';
-              const rawTags = project.tags || project.tag;
-              const tags = Array.isArray(rawTags)
-                ? rawTags
-                : rawTags
-                  ? [rawTags]
-                  : [];
+          <div className={styles.showcase}>
+            {featuredProject && renderFeatured(featuredProject)}
 
-              const isPaperOrResearch = /paper|research|fieldwork|study|etnografi|anthropology/i.test(
-                projectType
-              );
-              const actionLabel = isPaperOrResearch ? 'Read Study →' : 'View Project →';
+            {gridProjects.length > 0 && (
+              <div className={styles.grid}>
+                {gridProjects.map((project, index) => {
+                  const num = project.num || String(index + 1).padStart(2, '0');
+                  const slug = project.slug?.current || project.slug || project._id;
+                  const projectType = project.projectType || 'Project';
+                  const tags = getProjectTags(project);
+                  const safeLiveUrl = sanitizeHttpUrl(project.liveUrl);
 
-              return (
-                <Link
-                  to={`/work/${slug}`}
-                  className={styles.card}
-                  key={project._id || num}
-                >
-                  {/* Media Container: 16:9 ratio with coverImage or subtle fallback */}
-                  <div className={styles.cardMedia}>
-                    {project.coverImage ? (
-                      <img
-                        src={urlFor(project.coverImage)
-                          .width(800)
-                          .height(450)
-                          .fit('crop')
-                          .auto('format')
-                          .url()}
-                        alt={project.title}
-                        className={styles.cardImg}
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className={styles.cardFallback}>
-                        <div className={styles.fallbackPattern} aria-hidden="true" />
-                        <span className={styles.fallbackType}>{projectType}</span>
+                  const isPaperOrResearch =
+                    /paper|research|fieldwork|study|etnografi|anthropology/i.test(
+                      projectType
+                    );
+                  const actionLabel = isPaperOrResearch
+                    ? 'Read Study →'
+                    : 'View Project →';
+
+                  return (
+                    <article className={styles.card} key={project._id || num}>
+                      {project.coverImage?.asset ? (
+                        <Link to={`/work/${slug}`} className={styles.cardMedia}>
+                          <img
+                            src={urlFor(project.coverImage)
+                              .width(800)
+                              .height(450)
+                              .fit('crop')
+                              .auto('format')
+                              .url()}
+                            alt={project.title}
+                            className={styles.cardImg}
+                            loading="lazy"
+                          />
+                          <span className={styles.typeBadge}>{projectType}</span>
+                        </Link>
+                      ) : (
+                        <Link to={`/work/${slug}`} className={styles.cardNoMediaHeader}>
+                          <span className={styles.cardBigNum}>{num}</span>
+                          <div className={styles.cardHeaderMeta}>
+                            <span className={styles.typeLabel}>{projectType}</span>
+                            {project.year && (
+                              <span className={styles.cardYear}>{project.year}</span>
+                            )}
+                          </div>
+                        </Link>
+                      )}
+
+                      <div className={styles.cardBody}>
+                        {project.coverImage?.asset && (
+                          <div className={styles.cardMetaTop}>
+                            <span className={styles.cardNum}>{num}</span>
+                            {project.year && (
+                              <span className={styles.cardYear}>{project.year}</span>
+                            )}
+                          </div>
+                        )}
+
+                        <h3 className={styles.cardTitle}>
+                          <Link to={`/work/${slug}`} className={styles.cardTitleLink}>
+                            {project.title}
+                          </Link>
+                        </h3>
+
+                        {(project.summary || project.desc) && (
+                          <p className={styles.cardDesc}>
+                            {project.summary || project.desc}
+                          </p>
+                        )}
+
+                        <div className={styles.cardFooter}>
+                          <div className={styles.cardTags}>
+                            {tags.slice(0, 3).map((t) => (
+                              <span key={t} className={styles.tagBadge}>
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+
+                          <div className={styles.cardActions}>
+                            {safeLiveUrl && (
+                              <a
+                                href={safeLiveUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.quickLiveLink}
+                              >
+                                Live ↗
+                              </a>
+                            )}
+                            <Link to={`/work/${slug}`} className={styles.actionLink}>
+                              {actionLabel}
+                            </Link>
+                          </div>
+                        </div>
                       </div>
-                    )}
-                    <span className={styles.typeBadge}>{projectType}</span>
-                  </div>
-
-                  {/* Card Body using Flexbox with margin-top: auto for aligned footer */}
-                  <div className={styles.cardBody}>
-                    <div className={styles.cardMetaTop}>
-                      <span className={styles.cardNum}>{num}</span>
-                      {project.year && <span className={styles.cardYear}>{project.year}</span>}
-                    </div>
-
-                    <h2 className={styles.cardTitle}>{project.title}</h2>
-
-                    {(project.summary || project.desc) && (
-                      <p className={styles.cardDesc}>{project.summary || project.desc}</p>
-                    )}
-
-                    {/* Card Footer pinned to the bottom via margin-top: auto */}
-                    <div className={styles.cardFooter}>
-                      <div className={styles.cardTags}>
-                        {tags.slice(0, 3).map((t) => (
-                          <span key={t} className={styles.tagBadge}>
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                      <span className={styles.actionLink}>
-                        {actionLabel}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+                    </article>
+                  );
+                })}
+              </div>
+            )}
           </div>
         ) : (
           <div className={styles.emptyState}>Nothing here yet — check back soon.</div>
@@ -174,4 +349,3 @@ export default function Work() {
     </>
   );
 }
-
