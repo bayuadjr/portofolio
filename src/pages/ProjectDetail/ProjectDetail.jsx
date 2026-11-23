@@ -62,7 +62,7 @@ export default function ProjectDetail() {
         </header>
 
         {/* WEBSITE & ML-MODEL & BRAND types — preview section */}
-        {['website', 'ml-model', 'brand', 'other'].includes(project.projectType) && (
+        {['website', 'ml-model', 'brand', 'research', 'other'].includes(project.projectType) && (
           <div className={styles.previewSection}>
             {project.previewVideo && (
               <video autoPlay muted loop playsInline className={styles.previewVideo}>
@@ -87,16 +87,7 @@ export default function ProjectDetail() {
           </div>
         )}
 
-        {/* RESEARCH type — repo button only */}
-        {project.projectType === 'research' && project.repoUrl && (
-          <div className={styles.previewSection}>
-            <div className={styles.ctaRow}>
-              <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" className={styles.repoBtn}>
-                → GitHub Repo
-              </a>
-            </div>
-          </div>
-        )}
+
 
         <div className={styles.body}>
           {project.body ? (
