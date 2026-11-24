@@ -4,80 +4,54 @@ export default function About() {
       <section className="page-head">
         <h1>About</h1>
         <p>
-          How I got curious about ordinary habits, small tools, and why people rarely act the way a spreadsheet expects.
+          Mostly curious about everyday habits and why people rarely behave the way a neat chart predicts.
         </p>
       </section>
 
       <section className="section">
-        <div className="section-label">Background</div>
+        <div className="section-label">Story</div>
         <div className="section-body">
           <p>
-            I'm Bayu Adji Ramadhan, an anthropology student at Universitas Brawijaya in Malang. I started out in vocational high school learning software engineering, then switched tracks to study people, culture, and everyday life.
+            I study anthropology at Universitas Brawijaya. Before that I learned software in vocational school, so I tend to wander back and forth between writing field notes and writing code.
           </p>
           <p>
-            Fieldwork taught me not to jump too quickly from a neat pattern to a final conclusion. People bend rules, improvise, and mean different things by the same gesture depending on who is watching.
+            Fieldwork slows me down in a good way. Something that looks obvious from a distance usually gets stranger once you sit down with the people living it.
           </p>
           <p>
-            Learning data analysis and building small web tools helps me look at those questions from another angle: spotting what repeats on paper, then stepping outside to understand why.
+            Working with data gives me a wider look, while talking to people keeps me honest about what a table leaves out.
           </p>
         </div>
       </section>
 
       <section className="section">
-        <div className="section-label">Where I started</div>
+        <div className="section-label">So far</div>
         <div className="timeline">
           <div className="timeline-item">
-            <span className="when">Vocational School</span>
+            <span className="when">Vocational school</span>
             <div>
-              <h4>Software &amp; team habits</h4>
+              <h4>Learning to build</h4>
               <p>
-                Studied software engineering and helped run sprints as a student Scrum Master. That was where I first learned how small teams divide work, disagree, and turn a rough sketch into something people can click.
+                Where I picked up programming and saw how messy ideas turn into working tools.
               </p>
             </div>
           </div>
           <div className="timeline-item">
-            <span className="when">University</span>
+            <span className="when">Universitas Brawijaya</span>
             <div>
               <h4>Anthropology</h4>
               <p>
-                Entered Universitas Brawijaya to study anthropology. Sitting through interviews and writing field notes changed how I look at numbers: behind every clean table there is someone with context, habits, and reasons of their own.
+                Fieldwork, interviews, and paying closer attention to unwritten rules.
               </p>
             </div>
           </div>
           <div className="timeline-item">
-            <span className="when">Program Asah</span>
+            <span className="when">Lately</span>
             <div>
-              <h4>Working with data</h4>
+              <h4>Data and small tools</h4>
               <p>
-                Picked up Python, statistics, and machine learning through the Dicoding data program so I could explore social questions with code alongside qualitative notes.
+                Using Python and small web apps to explore social questions alongside qualitative notes.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="section-label">Things I spend time on</div>
-        <div className="skills-grid">
-          <div>
-            <h4>Fieldwork &amp; reading</h4>
-            <ul>
-              <li>Ethnographic observation</li>
-              <li>Qualitative interviews</li>
-              <li>Online communities</li>
-              <li>Everyday social habits</li>
-              <li>Writing field notes</li>
-            </ul>
-          </div>
-          <div>
-            <h4>Code &amp; data</h4>
-            <ul>
-              <li>Python, Pandas, NumPy</li>
-              <li>Exploratory data analysis</li>
-              <li>Basic statistics and modeling</li>
-              <li>Small React web apps</li>
-              <li>Offline-first tools</li>
-            </ul>
           </div>
         </div>
       </section>

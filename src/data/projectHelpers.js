@@ -12,7 +12,7 @@ export const FIELDNOTES_DEFAULTS = {
     email: 'bayu@fieldnotes.id',
     password: 'password123',
   },
-  tags: ['Fieldwork', 'Web app', 'Notes'],
+  tags: ['Fieldwork', 'Web app'],
 };
 
 const LEGACY_TAG_MAP = {

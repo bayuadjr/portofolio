@@ -4,12 +4,10 @@ import { FIELDNOTES_DEFAULTS } from '../../data/projectHelpers';
 export default function Hero() {
   return (
     <section className="hero" id="hero">
-      <p className="hero-meta">Malang, Indonesia</p>
-
       <h1>Bayu Adji Ramadhan</h1>
 
       <p className="hero-sub">
-        I study anthropology and spend my spare time working with data and building small tools. Mostly, I like paying attention to ordinary habits and seeing what shows up when you look a little closer.
+        I study anthropology and tinker with code. Mostly curious about ordinary habits and what happens when you look a bit closer.
       </p>
 
       <div className="hero-actions">

@@ -62,7 +62,7 @@ export default function Projects({ limit = 3 }) {
         <div className="intro-label">Recent work</div>
         <div>
           <p className="threads-lead">
-            A few things I've been making and looking into lately, from small apps to field notes.
+            Some recent projects and notes.
           </p>
         </div>
       </div>
@@ -82,7 +82,6 @@ export default function Projects({ limit = 3 }) {
         )}
 
         {displayedProjects.map((project, index) => {
-          const num = project.num || String(index + 1).padStart(2, '0');
           const slug = project.slug?.current || project.slug || project._id;
           const tags = getProjectTags(project);
           const tagText = tags.join(' · ');
@@ -92,10 +91,8 @@ export default function Projects({ limit = 3 }) {
             <Link
               to={slug ? `/work/${slug}` : '/work'}
               className="thread-row"
-              key={project._id || num || project.title}
+              key={project._id || index || project.title}
             >
-              <span className="thread-num">{num}</span>
-
               <div className="thread-body">
                 <div className="thread-title-row">
                   <h3>{project.title}</h3>

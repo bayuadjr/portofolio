@@ -71,7 +71,7 @@ export default function WritingPage() {
           Writing<span className={styles.accent}>.</span>
         </h1>
         <p className={styles.heroDesc}>
-          Half-formed ideas, book notes, and essays about things I keep noticing.
+          Book notes and essays about things I keep noticing.
         </p>
       </section>
 

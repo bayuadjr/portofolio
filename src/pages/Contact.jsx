@@ -107,11 +107,8 @@ export default function Contact() {
 
         <div className={styles.mainContent}>
           <h1 className={styles.heading}>
-            Always happy to trade notes, talk about a project, or just say hi.
+            Always happy to trade notes or talk through an idea.
           </h1>
-          <p className={styles.subheading}>
-            Pick a starter below or write from scratch. Clicking send opens your email app with the draft ready.
-          </p>
 
           <div className={styles.composerBox}>
             <div className={styles.composerHeader}>
@@ -185,10 +182,6 @@ export default function Contact() {
 
           <div className={styles.linksSectionTitle}>Elsewhere</div>
           <div className={styles.contactLinks}>
-            <a href={`mailto:${emailTarget}`} className={styles.linkRow}>
-              <span>Email</span>
-              <span className={styles.linkSub}>{emailTarget}</span>
-            </a>
             <a
               href="https://github.com/bayuadjr"
               target="_blank"
@@ -205,7 +198,7 @@ export default function Contact() {
               className={styles.linkRow}
             >
               <span>LinkedIn</span>
-              <span className={styles.linkSub}>Bayu Adji Ramadhan</span>
+              <span className={styles.linkSub}>linkedin.com/in/bayu-adji-ramadhan</span>
             </a>
             <a
               href="https://www.instagram.com/bayuadjr/"

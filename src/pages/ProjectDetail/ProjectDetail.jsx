@@ -96,7 +96,6 @@ export default function ProjectDetail() {
   }
 
   const tags = getProjectTags(project);
-  const highlights = Array.isArray(project.highlights) ? project.highlights : [];
   const hasDemoCreds = Boolean(
     project.demoCredentials?.email || project.demoCredentials?.password
   );
@@ -105,7 +104,7 @@ export default function ProjectDetail() {
   const safeLiveUrl = sanitizeHttpUrl(project.liveUrl);
   const safeRepoUrl = sanitizeHttpUrl(project.repoUrl);
   const hasPreviewOrLinks = Boolean(
-    safePreviewVideo || safeLiveUrl || safeRepoUrl || highlights.length > 0 || hasDemoCreds
+    safePreviewVideo || safeLiveUrl || safeRepoUrl || hasDemoCreds
   );
 
   return (
@@ -174,22 +173,6 @@ export default function ProjectDetail() {
                     View source
                   </a>
                 )}
-              </div>
-            )}
-
-            {highlights.length > 0 && (
-              <div className={styles.highlightsBlock}>
-                <div className={styles.highlightsLabel}>What is inside</div>
-                <div className={styles.highlightsGrid}>
-                  {highlights.map((item, idx) => (
-                    <div className={styles.highlightItem} key={item}>
-                      <span className={styles.highlightNum}>
-                        {String(idx + 1).padStart(2, '0')}
-                      </span>
-                      <span className={styles.highlightText}>{item}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             )}
 

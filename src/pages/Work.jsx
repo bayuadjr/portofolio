@@ -96,26 +96,25 @@ export default function Work() {
   }, [filteredProjects, featuredProject]);
 
   const renderFeatured = (project) => {
-    const num = project.num || '01';
     const slug = project.slug?.current || project.slug || project._id;
     const projectType = project.projectType || 'Web App';
     const tags = getProjectTags(project);
-    const highlights = Array.isArray(project.highlights) ? project.highlights : [];
     const safeLiveUrl = sanitizeHttpUrl(project.liveUrl);
     const safeRepoUrl = sanitizeHttpUrl(project.repoUrl);
     const liveLabel = isFieldnotesProject(project) ? 'Open Fieldnotes' : 'Open live app';
+    const hasDemoCreds = Boolean(
+      project.demoCredentials?.email || project.demoCredentials?.password
+    );
+    const hasAside = Boolean(project.coverImage?.asset || hasDemoCreds);
 
     return (
-      <article className={styles.featuredCard}>
+      <article className={`${styles.featuredCard} ${!hasAside ? styles.featuredSingle : ''}`}>
         <div className={styles.featuredMain}>
           <div className={styles.featuredMeta}>
             <span className={styles.metaLine}>
-              {num} / {projectType}
-              {project.year ? ` / ${project.year}` : ''}
+              {projectType}
+              {project.year ? ` · ${project.year}` : ''}
             </span>
-            {safeLiveUrl && (
-              <span className={styles.liveStatus}>Live demo available</span>
-            )}
           </div>
 
           <h2 className={styles.featuredTitle}>
@@ -165,43 +164,29 @@ export default function Work() {
           </div>
         </div>
 
-        <aside className={styles.featuredAside}>
-          {project.coverImage?.asset && (
-            <Link to={`/work/${slug}`} className={styles.featuredMedia}>
-              <img
-                src={urlFor(project.coverImage)
-                  .width(960)
-                  .height(540)
-                  .fit('crop')
-                  .auto('format')
-                  .url()}
-                alt={project.title}
-                width={960}
-                height={540}
-                fetchPriority="high"
-                className={styles.featuredImg}
-              />
-            </Link>
-          )}
+        {hasAside && (
+          <aside className={styles.featuredAside}>
+            {project.coverImage?.asset && (
+              <Link to={`/work/${slug}`} className={styles.featuredMedia}>
+                <img
+                  src={urlFor(project.coverImage)
+                    .width(960)
+                    .height(540)
+                    .fit('crop')
+                    .auto('format')
+                    .url()}
+                  alt={project.title}
+                  width={960}
+                  height={540}
+                  fetchPriority="high"
+                  className={styles.featuredImg}
+                />
+              </Link>
+            )}
 
-          {highlights.length > 0 && (
-            <div className={styles.insideBox}>
-              <div className={styles.insideHead}>Inside the app</div>
-              <ul className={styles.insideList}>
-                {highlights.map((item, idx) => (
-                  <li className={styles.insideRow} key={item}>
-                    <span className={styles.insideIndex}>
-                      {String(idx + 1).padStart(2, '0')}
-                    </span>
-                    <span className={styles.insideName}>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <DemoCredentials credentials={project.demoCredentials} compact />
-        </aside>
+            <DemoCredentials credentials={project.demoCredentials} compact />
+          </aside>
+        )}
       </article>
     );
   };
@@ -213,7 +198,7 @@ export default function Work() {
           Work<span className={styles.accent}>.</span>
         </h1>
         <p className={styles.heroDesc}>
-          Things I've built, studied, or helped run. Some started as class fieldwork, some as late-night experiments, and a few turned into tools other people can actually open.
+          Things I've built or written up along the way. Some began as fieldwork, others as side experiments.
         </p>
       </section>
 
@@ -253,7 +238,6 @@ export default function Work() {
             {gridProjects.length > 0 && (
               <div className={styles.grid}>
                 {gridProjects.map((project, index) => {
-                  const num = project.num || String(index + 1).padStart(2, '0');
                   const slug = project.slug?.current || project.slug || project._id;
                   const projectType = project.projectType || 'Project';
                   const tags = getProjectTags(project);
@@ -268,8 +252,8 @@ export default function Work() {
                     : 'Open project';
 
                   return (
-                    <article className={styles.card} key={project._id || num}>
-                      {project.coverImage?.asset ? (
+                    <article className={styles.card} key={project._id || index}>
+                      {project.coverImage?.asset && (
                         <Link to={`/work/${slug}`} className={styles.cardMedia}>
                           <img
                             src={urlFor(project.coverImage)
@@ -286,27 +270,21 @@ export default function Work() {
                           />
                           <span className={styles.typeBadge}>{projectType}</span>
                         </Link>
-                      ) : (
-                        <Link to={`/work/${slug}`} className={styles.cardNoMediaHeader}>
-                          <span className={styles.cardBigNum}>{num}</span>
-                          <div className={styles.cardHeaderMeta}>
+                      )}
+
+                      <div className={styles.cardBody}>
+                        {!project.coverImage?.asset ? (
+                          <div className={styles.cardMetaTop}>
                             <span className={styles.typeLabel}>{projectType}</span>
                             {project.year && (
                               <span className={styles.cardYear}>{project.year}</span>
                             )}
                           </div>
-                        </Link>
-                      )}
-
-                      <div className={styles.cardBody}>
-                        {project.coverImage?.asset && (
+                        ) : project.year ? (
                           <div className={styles.cardMetaTop}>
-                            <span className={styles.cardNum}>{num}</span>
-                            {project.year && (
-                              <span className={styles.cardYear}>{project.year}</span>
-                            )}
+                            <span className={styles.cardYear}>{project.year}</span>
                           </div>
-                        )}
+                        ) : null}
 
                         <h3 className={styles.cardTitle}>
                           <Link to={`/work/${slug}`} className={styles.cardTitleLink}>

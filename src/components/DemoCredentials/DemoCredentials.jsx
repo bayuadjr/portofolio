@@ -49,8 +49,7 @@ export default function DemoCredentials({ credentials, compact = false }) {
   return (
     <div className={`${styles.box} ${compact ? styles.compact : ''}`}>
       <div className={styles.header}>
-        <span className={styles.label}>Try the demo</span>
-        <span className={styles.hint}>Public test login</span>
+        <span className={styles.label}>Demo login</span>
       </div>
 
       <div className={styles.rows}>

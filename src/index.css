@@ -142,12 +142,6 @@ body {
   border-bottom: 1px solid var(--line);
 }
 
-.hero-meta {
-  font-size: 14px;
-  color: var(--mid);
-  margin-bottom: 20px;
-}
-
 .hero h1 {
   font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
@@ -294,7 +288,7 @@ body {
 .thread-row {
   grid-column: 2;
   display: grid;
-  grid-template-columns: 36px 1fr auto;
+  grid-template-columns: 1fr auto;
   align-items: baseline;
   gap: 20px;
   padding: 28px 0;
@@ -311,13 +305,6 @@ body {
 
 .thread-row:first-child {
   border-top: none;
-}
-
-.thread-num {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--subtle);
-  letter-spacing: 0.04em;
 }
 
 .thread-body {
@@ -439,7 +426,7 @@ body {
   margin-top: 28px;
 }
 
-/* About timeline & skills */
+/* About timeline */
 .timeline {
   grid-column: 2;
   max-width: 640px;
@@ -473,30 +460,6 @@ body {
   font-size: 14.5px;
   color: var(--mid);
   line-height: 1.65;
-}
-
-.skills-grid {
-  grid-column: 2;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 40px;
-  max-width: 640px;
-}
-
-.skills-grid h4 {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--mid);
-  margin-bottom: 12px;
-}
-
-.skills-grid ul {
-  list-style: none;
-}
-
-.skills-grid li {
-  font-size: 15px;
-  padding: 6px 0;
 }
 
 /* Main container */
@@ -543,8 +506,7 @@ footer {
   .intro,
   .threads-head,
   .threads-list,
-  .footer-cta,
-  .skills-grid {
+  .footer-cta {
     grid-template-columns: 1fr;
     gap: 20px;
   }
@@ -563,8 +525,7 @@ footer {
 
   .threads-footer,
   .error-box,
-  .timeline,
-  .skills-grid {
+  .timeline {
     grid-column: 1;
   }
 
