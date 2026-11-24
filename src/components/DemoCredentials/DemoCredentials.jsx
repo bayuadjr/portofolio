@@ -49,7 +49,7 @@ export default function DemoCredentials({ credentials, compact = false }) {
   return (
     <div className={`${styles.box} ${compact ? styles.compact : ''}`}>
       <div className={styles.header}>
-        <span className={styles.label}>Demo login</span>
+        <span className={styles.label}>Sandbox demo login</span>
       </div>
 
       <div className={styles.rows}>

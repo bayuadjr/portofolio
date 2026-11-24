@@ -25,5 +25,4 @@ dist-ssr
 *.njsproj
 *.sln
 # Scratch and local scripts
-restyle/
 scripts/

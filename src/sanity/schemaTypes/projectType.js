@@ -43,15 +43,31 @@ export const projectType = defineType({
       hidden: true,
     }),
     defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Research', value: 'Research' },
+          { title: 'Software & Tools', value: 'Software & Tools' },
+          { title: 'Product & Business', value: 'Product & Business' },
+        ],
+      },
+      description: 'Primary Work page grouping',
+    }),
+    defineField({
       name: 'projectType',
       title: 'Project Type',
       type: 'string',
       options: {
         list: [
           { title: 'Web App', value: 'Web App' },
+          { title: 'Case Study', value: 'Case Study' },
           { title: 'Working Paper', value: 'Working Paper' },
           { title: 'Fieldwork', value: 'Fieldwork' },
+          { title: 'Essay', value: 'Essay' },
           { title: 'Data Analysis', value: 'Data Analysis' },
+          { title: 'Operations', value: 'Operations' },
           { title: 'Research', value: 'Research' },
           { title: 'Other', value: 'Other' },
           // Legacy values for compatibility
@@ -64,6 +80,24 @@ export const projectType = defineType({
       },
       validation: (Rule) => Rule.required(),
       initialValue: 'Research',
+    }),
+    defineField({
+      name: 'role',
+      title: 'Role',
+      type: 'string',
+      description: 'Your role on this project (e.g. Creator & Product Developer)',
+    }),
+    defineField({
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      description: 'Current status (e.g. Active development, In progress, Completed)',
+    }),
+    defineField({
+      name: 'sortOrder',
+      title: 'Sort Order',
+      type: 'number',
+      description: 'Optional numeric order within Work listings (lower numbers appear first)',
     }),
     defineField({
       name: 'previewVideo',
@@ -202,6 +236,12 @@ export const projectType = defineType({
           ],
         },
       ],
+    }),
+    defineField({
+      name: 'relatedProjects',
+      title: 'Related Projects',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'project' }] }],
     }),
   ],
   preview: {

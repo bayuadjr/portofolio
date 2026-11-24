@@ -2,10 +2,15 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { client } from '../../sanity/client';
 import fallbackProjects from '../../data/projects';
-import { prepareProjects, getProjectTags } from '../../data/projectHelpers';
+import {
+  prepareProjects,
+  getProjectCategory,
+  getProjectTags,
+  isFieldnotesProject,
+} from '../../data/projectHelpers';
 import { sanitizeHttpUrl } from '../../utils/url';
 
-export default function Projects({ limit = 3 }) {
+export default function Projects({ limit = 4 }) {
   const [projects, setProjects] = useState(() => prepareProjects(fallbackProjects));
   const [fetchError, setFetchError] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
@@ -16,9 +21,13 @@ export default function Projects({ limit = 3 }) {
     const query = `*[_type == "project"] {
       _id,
       num,
+      sortOrder,
       title,
       slug,
+      category,
       projectType,
+      role,
+      status,
       featured,
       summary,
       desc,
@@ -43,7 +52,7 @@ export default function Projects({ limit = 3 }) {
         }
       })
       .catch((err) => {
-        console.error(err);
+        console.error('Failed to fetch projects:', err);
         if (!cancelled) {
           setFetchError(true);
         }
@@ -55,14 +64,18 @@ export default function Projects({ limit = 3 }) {
   }, [retryCount]);
 
   const displayedProjects = projects.slice(0, limit);
+  const leadProject = displayedProjects.find((item) => item.featured === true) || null;
+  const secondaryProjects = leadProject
+    ? displayedProjects.filter((item) => item !== leadProject)
+    : displayedProjects;
 
   return (
     <section className="threads" id="projects">
       <div className="threads-head">
-        <div className="intro-label">Recent work</div>
+        <div className="intro-label">Selected work</div>
         <div>
           <p className="threads-lead">
-            Some recent projects and notes.
+            Selected projects across research, software, and business systems.
           </p>
         </div>
       </div>
@@ -81,10 +94,63 @@ export default function Projects({ limit = 3 }) {
           </div>
         )}
 
-        {displayedProjects.map((project, index) => {
+        {leadProject && (() => {
+          const slug = leadProject.slug?.current || leadProject.slug || leadProject._id;
+          const tags = getProjectTags(leadProject);
+          const category = getProjectCategory(leadProject);
+          const safeLiveUrl = sanitizeHttpUrl(leadProject.liveUrl);
+          const liveLabel = isFieldnotesProject(leadProject) ? 'Open live app' : 'Open demo';
+
+          return (
+            <article className="thread-featured">
+              <div className="thread-featured-meta">
+                <span>{category}</span>
+                {leadProject.status && <span>· {leadProject.status}</span>}
+                {leadProject.year && <span>· {leadProject.year}</span>}
+              </div>
+
+              <h3 className="thread-featured-title">
+                <Link to={slug ? `/work/${slug}` : '/work'}>
+                  {leadProject.title}
+                </Link>
+              </h3>
+
+              <p className="thread-featured-desc">
+                {leadProject.summary || leadProject.desc}
+              </p>
+
+              {tags.length > 0 && (
+                <div className="thread-featured-tags">
+                  {tags.slice(0, 4).map((tag) => (
+                    <span key={tag} className="thread-tag-pill">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div className="thread-featured-actions">
+                <Link to={slug ? `/work/${slug}` : '/work'} className="btn-solid">
+                  Read case study
+                </Link>
+                {safeLiveUrl && (
+                  <a
+                    href={safeLiveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-outline"
+                  >
+                    {liveLabel}
+                  </a>
+                )}
+              </div>
+            </article>
+          );
+        })()}
+
+        {secondaryProjects.map((project, index) => {
           const slug = project.slug?.current || project.slug || project._id;
-          const tags = getProjectTags(project);
-          const tagText = tags.join(' · ');
+          const category = getProjectCategory(project);
           const hasLiveDemo = Boolean(sanitizeHttpUrl(project.liveUrl));
 
           return (
@@ -96,15 +162,14 @@ export default function Projects({ limit = 3 }) {
               <div className="thread-body">
                 <div className="thread-title-row">
                   <h3>{project.title}</h3>
-                  {hasLiveDemo && (
-                    <span className="thread-live">Live</span>
-                  )}
+                  {hasLiveDemo && <span className="thread-live">Live</span>}
                 </div>
                 <p>{project.summary || project.desc}</p>
               </div>
 
               <div className="thread-aside">
-                {tagText && <span className="tag">{tagText}</span>}
+                <span className="tag">{category}</span>
+                {project.year && <span className="tag">{project.year}</span>}
               </div>
             </Link>
           );

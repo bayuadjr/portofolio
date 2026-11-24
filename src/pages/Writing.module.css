@@ -26,8 +26,32 @@
   font-weight: 400;
   font-size: 17px;
   color: var(--mid);
-  max-width: 580px;
+  max-width: 600px;
   line-height: 1.65;
+}
+
+.inlineLink {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-ui);
+}
+
+.inlineLink:hover {
+  border-bottom-color: var(--ink);
+}
+
+.fallbackNotice {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 14px 18px;
+  border: 1px solid var(--border-ui);
+  background: var(--panel);
+  font-size: 14px;
+  color: var(--ink);
 }
 
 .content {

@@ -2,10 +2,17 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { client, urlFor } from '../sanity/client';
 import { sanitizeHttpUrl } from '../utils/url';
-
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import styles from './Adventure.module.css';
 
 export default function AdventurePage() {
+  useDocumentMeta({
+    title: 'Beyond · Field Journal',
+    description:
+      'Informal personal field journal documenting places, photographs, and everyday observations outside formal research.',
+    path: '/adventure',
+  });
+
   const [glimpses, setGlimpses] = useState([]);
   const [activeFilter, setActiveFilter] = useState('All');
   const [loading, setLoading] = useState(true);
@@ -67,11 +74,16 @@ export default function AdventurePage() {
   return (
     <>
       <section className={styles.hero}>
+        <p className={styles.heroEyebrow}>Field Journal</p>
         <h1 className={styles.heroTitle}>
           Beyond<span className={styles.accent}>.</span>
         </h1>
         <p className={styles.heroDesc}>
-          Photos and small visual notes from outside the desk.
+          Informal observations, photographs, places, and everyday moments noted outside structured research. For documented fieldwork and case studies, visit{' '}
+          <Link to="/work" className={styles.inlineLink}>
+            Work
+          </Link>
+          .
         </p>
       </section>
 
@@ -100,9 +112,14 @@ export default function AdventurePage() {
             <p className={styles.stateText}>
               Could not load visual notes right now. Check your connection and try again.
             </p>
-            <button type="button" className={styles.retryBtn} onClick={handleRetry}>
-              Try again
-            </button>
+            <div className={styles.stateActions}>
+              <button type="button" className={styles.retryBtn} onClick={handleRetry}>
+                Try again
+              </button>
+              <Link to="/writing" className={styles.secondaryStateLink}>
+                Read Writing instead
+              </Link>
+            </div>
           </div>
         ) : filteredGlimpses.length > 0 ? (
           <div className={styles.mosaic}>
@@ -111,6 +128,7 @@ export default function AdventurePage() {
               const itemHashtags = Array.isArray(item.hashtags) ? item.hashtags : [];
               const imgWidth = item.dimensions?.width || 700;
               const imgHeight = item.dimensions?.height || 525;
+              const previewText = item.caption || item.shortDescription;
 
               return (
                 <Link
@@ -120,17 +138,19 @@ export default function AdventurePage() {
                 >
                   <article className={styles.card}>
                     {item.mediaType === 'video' && safeVideoUrl ? (
-                      <video
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        width={700}
-                        height={525}
-                        className={styles.video}
-                      >
-                        <source src={safeVideoUrl} type="video/mp4" />
-                      </video>
+                      <div className={styles.videoWrap}>
+                        <video
+                          muted
+                          playsInline
+                          preload="metadata"
+                          width={700}
+                          height={525}
+                          className={styles.video}
+                        >
+                          <source src={safeVideoUrl} type="video/mp4" />
+                        </video>
+                        <span className={styles.mediaBadge}>Video</span>
+                      </div>
                     ) : item.image?.asset ? (
                       <img
                         src={urlFor(item.image).width(700).auto('format').url()}
@@ -142,10 +162,10 @@ export default function AdventurePage() {
                       />
                     ) : null}
 
-                    {(item.caption || item.location || itemHashtags.length > 0) && (
+                    {(previewText || item.location || itemHashtags.length > 0) && (
                       <div className={styles.captionBox}>
                         {item.location && <span className={styles.location}>{item.location}</span>}
-                        {item.caption && <p className={styles.caption}>{item.caption}</p>}
+                        {previewText && <p className={styles.caption}>{previewText}</p>}
                         {itemHashtags.length > 0 && (
                           <div className={styles.tagRow}>
                             {itemHashtags.map((tag) => (
@@ -174,8 +194,16 @@ export default function AdventurePage() {
         ) : (
           <div className={styles.stateBox}>
             <p className={styles.stateText}>
-              No visual notes published yet. Photos and short clips will show up here once added.
+              No field journal entries published yet. Photographs and informal observations will show up here as they are added.
             </p>
+            <div className={styles.stateActions}>
+              <Link to="/writing" className={styles.secondaryStateLink}>
+                Read essays in Writing
+              </Link>
+              <Link to="/work" className={styles.secondaryStateLink}>
+                Explore formal work
+              </Link>
+            </div>
           </div>
         )}
       </section>

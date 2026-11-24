@@ -5,6 +5,14 @@
   border-bottom: 1px solid var(--line);
 }
 
+.heroEyebrow {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mid);
+  margin-bottom: 12px;
+}
+
 .heroTitle {
   font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
@@ -26,8 +34,18 @@
   font-weight: 400;
   font-size: 17px;
   color: var(--mid);
-  max-width: 580px;
+  max-width: 620px;
   line-height: 1.65;
+}
+
+.inlineLink {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-ui);
+}
+
+.inlineLink:hover {
+  border-bottom-color: var(--ink);
 }
 
 .content {
@@ -108,12 +126,52 @@
   object-fit: cover;
 }
 
+.videoWrap {
+  position: relative;
+}
+
 .video {
   width: 100%;
   aspect-ratio: 4 / 3;
   height: auto;
   display: block;
   object-fit: cover;
+}
+
+.mediaBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 3px 9px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--border-ui);
+}
+
+.stateActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.secondaryStateLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-ui);
+}
+
+.secondaryStateLink:hover {
+  border-bottom-color: var(--ink);
 }
 
 .captionBox {

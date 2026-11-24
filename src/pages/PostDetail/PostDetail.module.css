@@ -59,6 +59,20 @@
   margin-bottom: 24px;
 }
 
+.fallbackNotice {
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 14px 18px;
+  border: 1px solid var(--border-ui);
+  background: var(--panel);
+  font-size: 14px;
+  color: var(--ink);
+}
+
 .backLinkTop,
 .backLink {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -163,6 +177,89 @@
   font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
   font-size: 16px;
+  color: var(--mid);
+}
+
+.extraSection {
+  margin-bottom: 48px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.extraHeading {
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.refList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.refItem {
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.refLink {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-ui);
+}
+
+.refLink:hover {
+  border-bottom-color: var(--ink);
+}
+
+.refNote {
+  color: var(--mid);
+  font-size: 14px;
+  margin-top: 3px;
+}
+
+.relatedList {
+  display: flex;
+  flex-direction: column;
+}
+
+.relatedRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding: 16px 0;
+  min-height: 44px;
+  border-top: 1px solid var(--line);
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.15s ease;
+}
+
+.relatedRow:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.relatedRow:hover {
+  opacity: 0.72;
+}
+
+.relatedTitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.relatedMeta {
+  font-size: 13px;
   color: var(--mid);
 }
 

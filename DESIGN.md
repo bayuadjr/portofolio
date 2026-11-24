@@ -1,17 +1,17 @@
 # Design Direction
 
-Personal portfolio and notebook of Bayu Adji Ramadhan.
+Personal portfolio and intellectual notebook of Bayu Adji Ramadhan, bringing together formal work (research, software, business systems) and informal notes (essays and field observations) under one voice.
 
 `Dial: ENERGY 2 / RHYTHM 2 / MOTION 1`
 
 ## Design Read
 
-Reading this as a personal portfolio and notebook for curious readers, peers, and potential collaborators, in a quiet monochrome editorial print style, dial ENERGY 2 / RHYTHM 2 / MOTION 1.
+Reading this as a hybrid professional portfolio and personal notebook for curious readers, researchers, and collaborators, in a quiet monochrome editorial print style, dial ENERGY 2 / RHYTHM 2 / MOTION 1.
 
 ## Identity & Voice
 
-- **Identity:** An anthropology student who also builds small tools and works with data.
-- **Voice:** Plain, curious, grounded, and conversational. Avoid startup hype, resume buzzwords, inflated claims, and decorative clutter.
+- **Identity:** A Cultural Anthropology student with a Software Engineering background exploring how people interact with technology, businesses, and social systems.
+- **Voice:** Plain, curious, grounded, and direct. Avoid corporate hype, inflated seniority, resume buzzwords, unverified metrics, and decorative clutter.
 
 ## Palette (WCAG AA Verified)
 
@@ -46,4 +46,4 @@ Reading this as a personal portfolio and notebook for curious readers, peers, an
 | Layout | Two-column editorial list on Home/About/Contact; featured block + grid on Work | Reflects actual content weight instead of repeating one card-grid template on every page. |
 | Spacing | Generous vertical breathing room on desktop, tighter scale at `<= 900px` and `<= 720px` | Uses whitespace to pace reading sections while preventing awkward stretching or crowding across breakpoints. |
 | Cards | Featured block for Fieldnotes; compact type/year headers when projects lack cover images | Avoids blank placeholder boxes and copy-paste cards by matching layout to real project assets. |
-| Motion | Hover/active state transitions only; `prefers-reduced-motion` honored | Matches `MOTION 1` so interactive controls confirm clicks without distracting readers. |
+| Motion | Hover/active state transitions only; `prefers-reduced-motion` honored; no autoplaying videos | Matches `MOTION 1` so interactive controls confirm clicks without distracting or disorienting readers. |

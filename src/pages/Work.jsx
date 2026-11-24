@@ -1,19 +1,30 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { client, urlFor } from '../sanity/client';
+import fallbackProjects from '../data/projects';
 import {
+  WORK_CATEGORIES,
   prepareProjects,
+  getProjectCategory,
   getProjectTags,
   isFieldnotesProject,
 } from '../data/projectHelpers';
 import { sanitizeHttpUrl } from '../utils/url';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import DemoCredentials from '../components/DemoCredentials/DemoCredentials';
 import styles from './Work.module.css';
 
 export default function Work() {
+  useDocumentMeta({
+    title: 'Work',
+    description:
+      'Fieldwork, software tools, and business digitalization case studies by Bayu Adji Ramadhan.',
+    path: '/work',
+  });
+
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [usingFallback, setUsingFallback] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const [activeFilter, setActiveFilter] = useState('All');
 
@@ -23,9 +34,13 @@ export default function Work() {
     const query = `*[_type == "project"] {
       _id,
       num,
+      sortOrder,
       title,
       slug,
+      category,
       projectType,
+      role,
+      status,
       featured,
       summary,
       desc,
@@ -45,14 +60,15 @@ export default function Work() {
       .then((data) => {
         if (!cancelled) {
           setProjects(prepareProjects(data || []));
-          setError(false);
+          setUsingFallback(false);
           setLoading(false);
         }
       })
       .catch((err) => {
         console.error('Failed to fetch projects from Sanity:', err);
         if (!cancelled) {
-          setError(true);
+          setProjects(prepareProjects(fallbackProjects));
+          setUsingFallback(true);
           setLoading(false);
         }
       });
@@ -64,25 +80,13 @@ export default function Work() {
 
   const handleRetry = () => {
     setLoading(true);
-    setError(false);
+    setUsingFallback(false);
     setRetryCount((c) => c + 1);
   };
 
-  const uniqueTags = useMemo(() => {
-    const tags = new Set();
-    projects.forEach((p) => {
-      getProjectTags(p).forEach((t) => tags.add(t));
-    });
-    return ['All', ...Array.from(tags).sort()];
-  }, [projects]);
-
   const filteredProjects = useMemo(() => {
     if (activeFilter === 'All') return projects;
-    const needle = activeFilter.toLowerCase();
-    return projects.filter((p) => {
-      if (p.projectType && p.projectType.toLowerCase() === needle) return true;
-      return getProjectTags(p).some((t) => t.toLowerCase() === needle);
-    });
+    return projects.filter((p) => getProjectCategory(p) === activeFilter);
   }, [projects, activeFilter]);
 
   const featuredProject = useMemo(
@@ -97,7 +101,7 @@ export default function Work() {
 
   const renderFeatured = (project) => {
     const slug = project.slug?.current || project.slug || project._id;
-    const projectType = project.projectType || 'Web App';
+    const category = getProjectCategory(project);
     const tags = getProjectTags(project);
     const safeLiveUrl = sanitizeHttpUrl(project.liveUrl);
     const safeRepoUrl = sanitizeHttpUrl(project.repoUrl);
@@ -107,14 +111,13 @@ export default function Work() {
     );
     const hasAside = Boolean(project.coverImage?.asset || hasDemoCreds);
 
+    const metaParts = [category, project.status, project.year].filter(Boolean);
+
     return (
       <article className={`${styles.featuredCard} ${!hasAside ? styles.featuredSingle : ''}`}>
         <div className={styles.featuredMain}>
           <div className={styles.featuredMeta}>
-            <span className={styles.metaLine}>
-              {projectType}
-              {project.year ? ` · ${project.year}` : ''}
-            </span>
+            <span className={styles.metaLine}>{metaParts.join(' · ')}</span>
           </div>
 
           <h2 className={styles.featuredTitle}>
@@ -149,7 +152,7 @@ export default function Work() {
               </a>
             )}
             <Link to={`/work/${slug}`} className={styles.secondaryBtn}>
-              Read the notes
+              Read case study
             </Link>
             {safeRepoUrl && (
               <a
@@ -198,38 +201,36 @@ export default function Work() {
           Work<span className={styles.accent}>.</span>
         </h1>
         <p className={styles.heroDesc}>
-          Things I've built or written up along the way. Some began as fieldwork, others as side experiments.
+          Selected projects across research, software tools, and business systems.
         </p>
       </section>
 
       <section className={styles.content}>
-        {uniqueTags.length > 1 && (
-          <div className={styles.filterBar} role="group" aria-label="Filter projects by topic">
-            {uniqueTags.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                className={`${styles.filterBtn} ${activeFilter === tag ? styles.active : ''}`}
-                onClick={() => setActiveFilter(tag)}
-              >
-                {tag}
-              </button>
-            ))}
+        <div className={styles.filterBar} role="group" aria-label="Filter projects by category">
+          {WORK_CATEGORIES.map((category) => (
+            <button
+              key={category}
+              type="button"
+              className={`${styles.filterBtn} ${activeFilter === category ? styles.active : ''}`}
+              onClick={() => setActiveFilter(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {usingFallback && (
+          <div className={styles.fallbackNotice} role="status">
+            <span>Could not reach the Sanity archive right now. Showing local case studies instead.</span>
+            <button type="button" className={styles.retryBtn} onClick={handleRetry}>
+              Try again
+            </button>
           </div>
         )}
 
         {loading ? (
           <div className={styles.stateBox} role="status">
             <p className={styles.stateText}>Loading projects...</p>
-          </div>
-        ) : error ? (
-          <div className={styles.stateBox} role="alert">
-            <p className={styles.stateText}>
-              Could not load projects right now. Check your connection and try again.
-            </p>
-            <button type="button" className={styles.retryBtn} onClick={handleRetry}>
-              Try again
-            </button>
           </div>
         ) : filteredProjects.length > 0 ? (
           <div className={styles.showcase}>
@@ -239,17 +240,14 @@ export default function Work() {
               <div className={styles.grid}>
                 {gridProjects.map((project, index) => {
                   const slug = project.slug?.current || project.slug || project._id;
-                  const projectType = project.projectType || 'Project';
+                  const category = getProjectCategory(project);
+                  const projectType = project.projectType || category;
                   const tags = getProjectTags(project);
                   const safeLiveUrl = sanitizeHttpUrl(project.liveUrl);
+                  const statusNote = [project.role, project.status].filter(Boolean).join(' · ');
 
-                  const isPaperOrResearch =
-                    /paper|research|fieldwork|study|etnografi|anthropology/i.test(
-                      projectType
-                    );
-                  const actionLabel = isPaperOrResearch
-                    ? 'Read notes'
-                    : 'Open project';
+                  const actionLabel =
+                    category === 'Research' ? 'Read notes' : 'Read case study';
 
                   return (
                     <article className={styles.card} key={project._id || index}>
@@ -268,29 +266,30 @@ export default function Work() {
                             className={styles.cardImg}
                             loading="lazy"
                           />
-                          <span className={styles.typeBadge}>{projectType}</span>
+                          <span className={styles.typeBadge}>{category}</span>
                         </Link>
                       )}
 
                       <div className={styles.cardBody}>
-                        {!project.coverImage?.asset ? (
-                          <div className={styles.cardMetaTop}>
-                            <span className={styles.typeLabel}>{projectType}</span>
-                            {project.year && (
-                              <span className={styles.cardYear}>{project.year}</span>
-                            )}
-                          </div>
-                        ) : project.year ? (
-                          <div className={styles.cardMetaTop}>
+                        <div className={styles.cardMetaTop}>
+                          <span className={styles.typeLabel}>
+                            {category}
+                            {projectType && projectType !== category ? ` · ${projectType}` : ''}
+                          </span>
+                          {project.year && (
                             <span className={styles.cardYear}>{project.year}</span>
-                          </div>
-                        ) : null}
+                          )}
+                        </div>
 
-                        <h3 className={styles.cardTitle}>
+                        <h2 className={styles.cardTitle}>
                           <Link to={`/work/${slug}`} className={styles.cardTitleLink}>
                             {project.title}
                           </Link>
-                        </h3>
+                        </h2>
+
+                        {statusNote && (
+                          <p className={styles.cardStatus}>{statusNote}</p>
+                        )}
 
                         {(project.summary || project.desc) && (
                           <p className={styles.cardDesc}>
@@ -333,7 +332,7 @@ export default function Work() {
         ) : projects.length > 0 ? (
           <div className={styles.stateBox}>
             <p className={styles.stateText}>
-              No projects match "{activeFilter}".
+              No projects in "{activeFilter}".
             </p>
             <button
               type="button"

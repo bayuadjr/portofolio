@@ -140,7 +140,19 @@
   font-size: 16px;
   color: var(--ink);
   line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.shortDesc {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15.5px;
+  color: var(--mid);
+  line-height: 1.65;
   margin-bottom: 24px;
+}
+
+.reflection {
+  margin-bottom: 28px;
 }
 
 .hashtags {

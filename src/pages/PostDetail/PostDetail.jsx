@@ -2,6 +2,15 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { client, urlFor } from '../../sanity/client';
 import PortableTextRenderer from '../../components/PortableText/PortableTextRenderer';
+import {
+  enrichPost,
+  estimateReadingTime,
+  findFallbackPostBySlug,
+  getRelatedFallbackPosts,
+} from '../../data/postHelpers';
+import { getProjectCategory } from '../../data/projectHelpers';
+import { sanitizeHttpUrl } from '../../utils/url';
+import { useDocumentMeta } from '../../hooks/useDocumentMeta';
 import styles from './PostDetail.module.css';
 
 export default function PostDetail() {
@@ -11,20 +20,38 @@ export default function PostDetail() {
     slug: null,
     attempt: -1,
     post: null,
+    relatedPosts: [],
     error: false,
+    usingFallback: false,
   });
 
   const loading = state.slug !== slug || state.attempt !== retryCount;
   const error = !loading && state.error;
-  const post = !loading && !state.error ? state.post : null;
+  const usingFallback = !loading && state.usingFallback;
+  const post = !loading && !state.error && state.post ? enrichPost(state.post) : null;
+  const relatedPosts = !loading && !state.error ? state.relatedPosts.map(enrichPost) : [];
+
+  useDocumentMeta({
+    title: post?.title || 'Writing',
+    description: post?.summary || undefined,
+    path: `/writing/${slug || ''}`,
+  });
 
   useEffect(() => {
     let cancelled = false;
 
     const fetchPost = async () => {
       try {
-        const query = `*[_type == "post" && (slug.current == $slug || _id == $slug)][0]{
+        const postQuery = `*[_type == "post" && (slug.current == $slug || _id == $slug)][0]{
           ...,
+          relatedProjects[]->{
+            _id,
+            title,
+            slug,
+            category,
+            projectType,
+            year
+          },
           body[]{
             ...,
             _type == "fileAttachment" => {
@@ -33,14 +60,44 @@ export default function PostDetail() {
             }
           }
         }`;
-        const data = await client.fetch(query, { slug });
+
+        const relatedQuery = `*[_type == "post" && slug.current != $slug && _id != $slug] | order(date desc)[0...2]{
+          _id,
+          title,
+          slug,
+          date,
+          category,
+          tag,
+          summary
+        }`;
+
+        const [data, related] = await Promise.all([
+          client.fetch(postQuery, { slug }),
+          client.fetch(relatedQuery, { slug }),
+        ]);
+
         if (!cancelled) {
-          setState({ slug, attempt: retryCount, post: data || null, error: false });
+          setState({
+            slug,
+            attempt: retryCount,
+            post: data || null,
+            relatedPosts: Array.isArray(related) ? related : [],
+            error: false,
+            usingFallback: false,
+          });
         }
       } catch (err) {
         console.error('Failed to fetch post:', err);
         if (!cancelled) {
-          setState({ slug, attempt: retryCount, post: null, error: true });
+          const fallback = findFallbackPostBySlug(slug);
+          setState({
+            slug,
+            attempt: retryCount,
+            post: fallback,
+            relatedPosts: fallback ? getRelatedFallbackPosts(slug, 2) : [],
+            error: !fallback,
+            usingFallback: Boolean(fallback),
+          });
         }
       }
     };
@@ -92,7 +149,11 @@ export default function PostDetail() {
     );
   }
 
-  const tags = Array.isArray(post.tag) ? post.tag : post.tag ? [post.tag] : [];
+  const minutes = estimateReadingTime(post.body, post.readingTime);
+  const references = Array.isArray(post.references) ? post.references : [];
+  const relatedProjects = Array.isArray(post.relatedProjects)
+    ? post.relatedProjects.filter(Boolean)
+    : [];
 
   return (
     <article className={styles.container}>
@@ -101,6 +162,19 @@ export default function PostDetail() {
           Back to Writing
         </Link>
       </div>
+
+      {usingFallback && (
+        <div className={styles.fallbackNotice} role="status">
+          <span>Showing local article notes because the Sanity archive could not be reached.</span>
+          <button
+            type="button"
+            className={styles.retryBtn}
+            onClick={() => setRetryCount((c) => c + 1)}
+          >
+            Try again
+          </button>
+        </div>
+      )}
 
       {post.coverImage?.asset && (
         <div className={styles.coverWrapper}>
@@ -121,14 +195,18 @@ export default function PostDetail() {
           <div className={styles.meta}>
             {post.date && (
               <span className={styles.date}>
-                {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                {new Date(post.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
               </span>
             )}
-            {post.readingTime && (
-              <span className={styles.readingTime}>{post.readingTime} min read</span>
+            {minutes && (
+              <span className={styles.readingTime}>{minutes} min read</span>
             )}
-            {tags.map((t) => (
-              <span key={t} className={styles.tag}>{t}</span>
+            {post.categories.map((cat) => (
+              <span key={cat} className={styles.tag}>{cat}</span>
             ))}
           </div>
         </header>
@@ -140,6 +218,88 @@ export default function PostDetail() {
             <p className={styles.emptyBody}>No text added for this post yet.</p>
           )}
         </div>
+
+        {references.length > 0 && (
+          <section className={styles.extraSection} aria-label="References">
+            <h2 className={styles.extraHeading}>References</h2>
+            <ul className={styles.refList}>
+              {references.map((ref, idx) => {
+                const safeHref = sanitizeHttpUrl(ref?.url);
+                return (
+                  <li key={ref?._key || idx} className={styles.refItem}>
+                    {safeHref ? (
+                      <a
+                        href={safeHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.refLink}
+                      >
+                        {ref.title || safeHref}
+                      </a>
+                    ) : (
+                      <span>{ref?.title}</span>
+                    )}
+                    {ref?.note && <p className={styles.refNote}>{ref.note}</p>}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        )}
+
+        {relatedProjects.length > 0 && (
+          <section className={styles.extraSection} aria-label="Related work">
+            <h2 className={styles.extraHeading}>Related work</h2>
+            <div className={styles.relatedList}>
+              {relatedProjects.map((proj) => {
+                const projSlug = proj.slug?.current || proj.slug || proj._id;
+                return (
+                  <Link
+                    key={proj._id || projSlug}
+                    to={`/work/${projSlug}`}
+                    className={styles.relatedRow}
+                  >
+                    <span className={styles.relatedTitle}>{proj.title}</span>
+                    <span className={styles.relatedMeta}>
+                      {getProjectCategory(proj)}
+                      {proj.year ? ` · ${proj.year}` : ''}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {relatedPosts.length > 0 && (
+          <section className={styles.extraSection} aria-label="Related writing">
+            <h2 className={styles.extraHeading}>More writing</h2>
+            <div className={styles.relatedList}>
+              {relatedPosts.map((rel) => {
+                const relSlug = rel.slug?.current || rel.slug || rel._id;
+                const relDate = rel.date
+                  ? new Date(rel.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                    })
+                  : '';
+
+                return (
+                  <Link
+                    key={rel._id || relSlug}
+                    to={`/writing/${relSlug}`}
+                    className={styles.relatedRow}
+                  >
+                    <span className={styles.relatedTitle}>{rel.title}</span>
+                    <span className={styles.relatedMeta}>
+                      {rel.primaryCategory || relDate}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         <div className={styles.footer}>
           <Link to="/writing" className={styles.backLink}>

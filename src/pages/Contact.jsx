@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { COLLABORATION_TOPICS } from '../data/siteContent';
 import styles from './Contact.module.css';
 
 const TEMPLATES = [
@@ -44,6 +46,13 @@ Best,
 ];
 
 export default function Contact() {
+  useDocumentMeta({
+    title: 'Contact',
+    description:
+      'Get in touch with Bayu Adji Ramadhan for research notes, software projects, or academic collaborations.',
+    path: '/contact',
+  });
+
   const emailTarget = import.meta.env.VITE_EMAIL || 'bayuadji500@gmail.com';
   const [activeTemplate, setActiveTemplate] = useState(TEMPLATES[0].id);
   const [subject, setSubject] = useState(TEMPLATES[0].subject);
@@ -109,6 +118,17 @@ export default function Contact() {
           <h1 className={styles.heading}>
             Always happy to trade notes or talk through an idea.
           </h1>
+
+          <div className={styles.collabBox}>
+            <div className={styles.collabLabel}>Usually happy to talk about</div>
+            <ul className={styles.collabList}>
+              {COLLABORATION_TOPICS.map((topic) => (
+                <li key={topic} className={styles.collabItem}>
+                  {topic}
+                </li>
+              ))}
+            </ul>
+          </div>
 
           <div className={styles.composerBox}>
             <div className={styles.composerHeader}>

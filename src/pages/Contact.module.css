@@ -30,8 +30,38 @@
   font-size: clamp(32px, 4.5vw, 52px);
   line-height: 1.25;
   color: var(--ink);
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   letter-spacing: -0.01em;
+}
+
+.collabBox {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.collabLabel {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mid);
+  margin-bottom: 10px;
+}
+
+.collabList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.collabItem {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
 }
 
 /* Message composer */

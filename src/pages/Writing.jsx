@@ -1,32 +1,59 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { client } from '../sanity/client';
-
+import fallbackPosts from '../data/posts';
+import {
+  POST_CATEGORIES,
+  enrichPost,
+  estimateReadingTime,
+} from '../data/postHelpers';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import styles from './Writing.module.css';
 
 export default function WritingPage() {
+  useDocumentMeta({
+    title: 'Writing',
+    description:
+      'Longer-form essays, reading notes, and research reflections by Bayu Adji Ramadhan.',
+    path: '/writing',
+  });
+
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [usingFallback, setUsingFallback] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const [activeFilter, setActiveFilter] = useState('All');
 
   useEffect(() => {
     let cancelled = false;
 
+    const query = `*[_type == "post"] | order(date desc) {
+      _id,
+      title,
+      slug,
+      date,
+      category,
+      featured,
+      tag,
+      summary,
+      readingTime,
+      body
+    }`;
+
     client
-      .fetch('*[_type == "post"] | order(date desc)')
+      .fetch(query)
       .then((data) => {
         if (!cancelled) {
-          setPosts(data || []);
-          setError(false);
+          setPosts((data || []).map(enrichPost));
+          setUsingFallback(false);
           setLoading(false);
         }
       })
       .catch((err) => {
         console.error('Failed to fetch posts:', err);
         if (!cancelled) {
-          setError(true);
+          setPosts(fallbackPosts.map(enrichPost));
+          setUsingFallback(true);
           setLoading(false);
         }
       });
@@ -38,30 +65,27 @@ export default function WritingPage() {
 
   const handleRetry = () => {
     setLoading(true);
-    setError(false);
+    setUsingFallback(false);
     setRetryCount((c) => c + 1);
   };
 
-  const uniqueTags = useMemo(() => {
-    const tags = new Set();
+  const filterCategories = useMemo(() => {
+    const present = new Set();
     posts.forEach((p) => {
-      if (Array.isArray(p.tag)) {
-        p.tag.forEach((t) => tags.add(t));
-      } else if (p.tag) {
-        tags.add(p.tag);
-      }
+      p.categories.forEach((cat) => present.add(cat));
     });
-    return ['All', ...Array.from(tags).sort()];
+
+    const ordered = POST_CATEGORIES.slice(1).filter((cat) => present.has(cat));
+    present.forEach((cat) => {
+      if (!ordered.includes(cat)) ordered.push(cat);
+    });
+
+    return ordered.length > 0 ? ['All', ...ordered] : ['All'];
   }, [posts]);
 
   const filteredPosts = useMemo(() => {
     if (activeFilter === 'All') return posts;
-    return posts.filter((p) => {
-      if (Array.isArray(p.tag)) {
-        return p.tag.includes(activeFilter);
-      }
-      return p.tag === activeFilter;
-    });
+    return posts.filter((p) => p.categories.includes(activeFilter));
   }, [posts, activeFilter]);
 
   return (
@@ -71,23 +95,36 @@ export default function WritingPage() {
           Writing<span className={styles.accent}>.</span>
         </h1>
         <p className={styles.heroDesc}>
-          Book notes and essays about things I keep noticing.
+          Essays, reading notes, and longer-form thinking across anthropology, data, and software. For informal visual notes and places, visit{' '}
+          <Link to="/adventure" className={styles.inlineLink}>
+            Beyond
+          </Link>
+          .
         </p>
       </section>
 
       <section className={styles.content}>
-        {uniqueTags.length > 1 && (
-          <div className={styles.filterBar} role="group" aria-label="Filter writing by topic">
-            {uniqueTags.map((tag) => (
+        {filterCategories.length > 1 && (
+          <div className={styles.filterBar} role="group" aria-label="Filter writing by category">
+            {filterCategories.map((category) => (
               <button
-                key={tag}
+                key={category}
                 type="button"
-                className={`${styles.filterBtn} ${activeFilter === tag ? styles.active : ''}`}
-                onClick={() => setActiveFilter(tag)}
+                className={`${styles.filterBtn} ${activeFilter === category ? styles.active : ''}`}
+                onClick={() => setActiveFilter(category)}
               >
-                {tag}
+                {category}
               </button>
             ))}
+          </div>
+        )}
+
+        {usingFallback && (
+          <div className={styles.fallbackNotice} role="status">
+            <span>Could not reach the Sanity archive right now. Showing local notes instead.</span>
+            <button type="button" className={styles.retryBtn} onClick={handleRetry}>
+              Try again
+            </button>
           </div>
         )}
 
@@ -95,22 +132,18 @@ export default function WritingPage() {
           <div className={styles.stateBox} role="status">
             <p className={styles.stateText}>Loading posts...</p>
           </div>
-        ) : error ? (
-          <div className={styles.stateBox} role="alert">
-            <p className={styles.stateText}>
-              Could not load writing right now. Check your connection and try again.
-            </p>
-            <button type="button" className={styles.retryBtn} onClick={handleRetry}>
-              Try again
-            </button>
-          </div>
         ) : filteredPosts.length > 0 ? (
           <div className={styles.list}>
             {filteredPosts.map((post) => {
-              const tagText = Array.isArray(post.tag) ? post.tag.join(' · ') : post.tag || '';
+              const categoryText = post.categories.join(' · ');
               const dateText = post.date
-                ? new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+                ? new Date(post.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })
                 : '';
+              const minutes = estimateReadingTime(post.body, post.readingTime);
 
               return (
                 <Link
@@ -120,8 +153,8 @@ export default function WritingPage() {
                 >
                   <div className={styles.rowMetaLeft}>
                     {dateText && <span className={styles.rowDate}>{dateText}</span>}
-                    {post.readingTime && (
-                      <span className={styles.readingTime}>{post.readingTime} min read</span>
+                    {minutes && (
+                      <span className={styles.readingTime}>{minutes} min read</span>
                     )}
                   </div>
 
@@ -131,7 +164,7 @@ export default function WritingPage() {
                   </div>
 
                   <div className={styles.rowMetaRight}>
-                    {tagText && <span className={styles.rowTag}>{tagText}</span>}
+                    {categoryText && <span className={styles.rowTag}>{categoryText}</span>}
                   </div>
                 </Link>
               );

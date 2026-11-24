@@ -27,6 +27,27 @@ export const postType = defineType({
       type: 'datetime',
     }),
     defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Anthropology', value: 'Anthropology' },
+          { title: 'Research Notes', value: 'Research Notes' },
+          { title: 'Data & Technology', value: 'Data & Technology' },
+          { title: 'Reading Notes', value: 'Reading Notes' },
+          { title: 'Reflections', value: 'Reflections' },
+        ],
+      },
+      description: 'Primary section category on the Writing page',
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Featured',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
       name: 'tag',
       title: 'Tags',
       type: 'array',
@@ -140,6 +161,41 @@ export const postType = defineType({
           ],
         },
       ],
+    }),
+    defineField({
+      name: 'references',
+      title: 'References & External Links',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Title',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'url',
+              title: 'URL',
+              type: 'url',
+              validation: (Rule) => Rule.uri({ scheme: ['http', 'https'] }),
+            }),
+            defineField({
+              name: 'note',
+              title: 'Note',
+              type: 'string',
+            }),
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: 'relatedProjects',
+      title: 'Related Projects',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'project' }] }],
     }),
   ],
 });

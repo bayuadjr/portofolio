@@ -1,26 +1,45 @@
+import fallbackProjects from './projects';
+
+export const WORK_CATEGORIES = [
+  'All',
+  'Research',
+  'Software & Tools',
+  'Product & Business',
+];
+
 export const FIELDNOTES_DEFAULTS = {
   slug: 'fieldnotes-ai-ethnographic-assistant',
   liveUrl: 'https://fieldnotes-ivory.vercel.app/',
   repoUrl: 'https://github.com/bayuadjr/fieldnotes',
   featured: true,
+  category: 'Software & Tools',
   projectType: 'Web App',
+  role: 'Creator & Product Developer',
+  status: 'Active development',
   year: '2026',
   summary:
-    'An offline-first field notebook for researchers working on slow connections. Includes team digests, theme tracking, perspective drift, and tension logs.',
+    'An AI-assisted ethnographic fieldwork companion built local-first so qualitative researchers keep interpretive authority.',
   highlights: ['Team Digest', 'Theme Detector', 'Perspective Drift', 'Tension Log'],
   demoCredentials: {
     email: 'bayu@fieldnotes.id',
     password: 'password123',
   },
-  tags: ['Fieldwork', 'Web app'],
+  tags: ['Fieldwork', 'React', 'Dexie.js', 'Supabase'],
 };
 
 const LEGACY_TAG_MAP = {
   anthropology: 'Anthropology',
-  'data science': 'Data',
+  'data science': 'Data Analysis',
   ethnography: 'Fieldwork',
   hustler: 'Operations',
 };
+
+const VALID_CATEGORIES = new Set(WORK_CATEGORIES.filter((c) => c !== 'All'));
+
+const FALLBACK_BY_ID = new Map(fallbackProjects.map((p) => [p._id, p]));
+const FALLBACK_BY_SLUG = new Map(
+  fallbackProjects.map((p) => [p.slug?.current || p.slug, p]).filter(([s]) => Boolean(s))
+);
 
 export function normalizeTag(tag) {
   if (typeof tag !== 'string') return '';
@@ -63,6 +82,34 @@ export function isFieldnotesProject(project) {
   );
 }
 
+export function getProjectCategory(project) {
+  if (!project) return 'Research';
+  if (project.category && VALID_CATEGORIES.has(project.category)) {
+    return project.category;
+  }
+
+  const slug = project.slug?.current || project.slug || '';
+  const typeText = `${project.projectType || ''} ${project.title || ''} ${slug}`.toLowerCase();
+
+  if (
+    /harmoko|business|operations|inisian|digitalization|product|company profile|brand/i.test(
+      typeText
+    )
+  ) {
+    return 'Product & Business';
+  }
+
+  if (
+    /web app|fieldnotes|maintenance|software|tool|website|portofolio|portfolio|php|mysql/i.test(
+      typeText
+    )
+  ) {
+    return 'Software & Tools';
+  }
+
+  return 'Research';
+}
+
 function cleanWrappedQuotes(text) {
   if (typeof text !== 'string') return text;
   const trimmed = text.trim();
@@ -75,7 +122,9 @@ function cleanWrappedQuotes(text) {
 export function enrichProject(project) {
   if (!project) return project;
 
-  const cleanedSummary = cleanWrappedQuotes(project.summary);
+  const slug = project.slug?.current || project.slug;
+  const localMatch = FALLBACK_BY_ID.get(project._id) || FALLBACK_BY_SLUG.get(slug);
+  const cleanedSummary = cleanWrappedQuotes(project.summary || project.desc);
   const isFieldnotes = isFieldnotesProject(project);
 
   const hasExplicitTags = Array.isArray(project.tags) && project.tags.length > 0;
@@ -83,14 +132,28 @@ export function enrichProject(project) {
     ? getProjectTags({ tags: project.tags })
     : isFieldnotes
       ? FIELDNOTES_DEFAULTS.tags
-      : getProjectTags(project);
+      : getProjectTags(project.tags || project.tag ? project : localMatch);
+
+  const category = getProjectCategory({
+    ...localMatch,
+    ...project,
+  });
+
+  const baseEnriched = {
+    ...project,
+    category,
+    role: project.role || localMatch?.role || null,
+    status: project.status || localMatch?.status || null,
+    sortOrder:
+      typeof project.sortOrder === 'number'
+        ? project.sortOrder
+        : localMatch?.sortOrder ?? null,
+    summary: cleanedSummary || localMatch?.summary || '',
+    tags: normalizedTags,
+  };
 
   if (!isFieldnotes) {
-    return {
-      ...project,
-      summary: cleanedSummary,
-      tags: normalizedTags,
-    };
+    return baseEnriched;
   }
 
   const hasDemoCreds = Boolean(
@@ -98,18 +161,23 @@ export function enrichProject(project) {
   );
 
   return {
-    ...project,
-    summary: cleanedSummary || FIELDNOTES_DEFAULTS.summary,
+    ...baseEnriched,
+    summary: baseEnriched.summary || FIELDNOTES_DEFAULTS.summary,
     liveUrl: project.liveUrl || FIELDNOTES_DEFAULTS.liveUrl,
     repoUrl: project.repoUrl || FIELDNOTES_DEFAULTS.repoUrl,
     featured:
       typeof project.featured === 'boolean'
         ? project.featured
         : FIELDNOTES_DEFAULTS.featured,
+    category: VALID_CATEGORIES.has(project.category)
+      ? project.category
+      : FIELDNOTES_DEFAULTS.category,
     projectType:
       !project.projectType || project.projectType === 'research'
         ? FIELDNOTES_DEFAULTS.projectType
         : project.projectType,
+    role: project.role || FIELDNOTES_DEFAULTS.role,
+    status: project.status || FIELDNOTES_DEFAULTS.status,
     year: project.year || FIELDNOTES_DEFAULTS.year,
     highlights:
       Array.isArray(project.highlights) && project.highlights.length > 0
@@ -160,6 +228,14 @@ export function prepareProjects(rawProjects) {
     const featuredDiff = (b.featured === true ? 1 : 0) - (a.featured === true ? 1 : 0);
     if (featuredDiff !== 0) return featuredDiff;
 
+    const orderA = typeof a.sortOrder === 'number' && Number.isFinite(a.sortOrder) ? a.sortOrder : null;
+    const orderB = typeof b.sortOrder === 'number' && Number.isFinite(b.sortOrder) ? b.sortOrder : null;
+    if (orderA !== null && orderB !== null && orderA !== orderB) {
+      return orderA - orderB;
+    }
+    if (orderA !== null && orderB === null) return -1;
+    if (orderB !== null && orderA === null) return 1;
+
     const numA = parseInt(a.num, 10);
     const numB = parseInt(b.num, 10);
     const safeA = Number.isNaN(numA) ? 999 : numA;
@@ -168,4 +244,22 @@ export function prepareProjects(rawProjects) {
 
     return (a.title || '').localeCompare(b.title || '');
   });
+}
+
+export function findFallbackProjectBySlug(slug) {
+  if (!slug) return null;
+  const match = FALLBACK_BY_SLUG.get(slug) || FALLBACK_BY_ID.get(slug);
+  return match ? enrichProject(match) : null;
+}
+
+export function getRelatedFallbackProjects(project) {
+  if (!project) return [];
+  const slug = project.slug?.current || project.slug;
+  const localMatch = FALLBACK_BY_ID.get(project._id) || FALLBACK_BY_SLUG.get(slug);
+  const slugs = localMatch?.relatedSlugs || project.relatedSlugs || [];
+
+  return slugs
+    .map((targetSlug) => FALLBACK_BY_SLUG.get(targetSlug))
+    .filter(Boolean)
+    .map((item) => enrichProject(item));
 }

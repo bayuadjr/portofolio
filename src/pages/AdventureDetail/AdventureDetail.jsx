@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { client, urlFor } from '../../sanity/client';
 import { sanitizeHttpUrl } from '../../utils/url';
+import { useDocumentMeta } from '../../hooks/useDocumentMeta';
+import PortableTextRenderer from '../../components/PortableText/PortableTextRenderer';
 import styles from './AdventureDetail.module.css';
 
 export default function AdventureDetail() {
@@ -17,6 +19,12 @@ export default function AdventureDetail() {
   const loading = state.slug !== slug || state.attempt !== retryCount;
   const error = !loading && state.error;
   const glimpse = !loading && !state.error ? state.glimpse : null;
+
+  useDocumentMeta({
+    title: glimpse?.title || glimpse?.location || 'Field Journal',
+    description: glimpse?.shortDescription || glimpse?.caption || undefined,
+    path: `/adventure/${slug || ''}`,
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -102,11 +110,9 @@ export default function AdventureDetail() {
       <div className={styles.mediaWrapper}>
         {glimpse.mediaType === 'video' && safeVideoUrl ? (
           <video
-            autoPlay
-            muted
-            loop
-            playsInline
             controls
+            playsInline
+            preload="metadata"
             width={1200}
             height={675}
             className={styles.video}
@@ -132,7 +138,11 @@ export default function AdventureDetail() {
           </h1>
           {glimpse.date && (
             <div className={styles.date}>
-              {new Date(glimpse.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              {new Date(glimpse.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
             </div>
           )}
         </header>
@@ -140,6 +150,18 @@ export default function AdventureDetail() {
         {glimpse.caption && (
           <p className={styles.caption}>{glimpse.caption}</p>
         )}
+
+        {glimpse.shortDescription && (
+          <p className={styles.shortDesc}>{glimpse.shortDescription}</p>
+        )}
+
+        {Array.isArray(glimpse.reflection) && glimpse.reflection.length > 0 ? (
+          <div className={styles.reflection}>
+            <PortableTextRenderer value={glimpse.reflection} />
+          </div>
+        ) : typeof glimpse.reflection === 'string' && glimpse.reflection.trim() ? (
+          <p className={styles.shortDesc}>{glimpse.reflection}</p>
+        ) : null}
 
         {hashtags.length > 0 && (
           <div className={styles.hashtags}>
