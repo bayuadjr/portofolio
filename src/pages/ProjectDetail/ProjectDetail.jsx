@@ -9,10 +9,17 @@ import styles from './ProjectDetail.module.css';
 
 export default function ProjectDetail() {
   const { slug } = useParams();
-  const [state, setState] = useState({ slug: null, project: null });
+  const [retryCount, setRetryCount] = useState(0);
+  const [state, setState] = useState({
+    slug: null,
+    attempt: -1,
+    project: null,
+    error: false,
+  });
 
-  const loading = state.slug !== slug;
-  const project = state.slug === slug ? enrichProject(state.project) : null;
+  const loading = state.slug !== slug || state.attempt !== retryCount;
+  const error = !loading && state.error;
+  const project = !loading && !state.error ? enrichProject(state.project) : null;
 
   useEffect(() => {
     let cancelled = false;
@@ -31,12 +38,12 @@ export default function ProjectDetail() {
         }`;
         const data = await client.fetch(query, { slug });
         if (!cancelled) {
-          setState({ slug, project: data || null });
+          setState({ slug, attempt: retryCount, project: data || null, error: false });
         }
-      } catch (error) {
-        console.error('Failed to fetch project:', error);
+      } catch (err) {
+        console.error('Failed to fetch project:', err);
         if (!cancelled) {
-          setState({ slug, project: null });
+          setState({ slug, attempt: retryCount, project: null, error: true });
         }
       }
     };
@@ -45,10 +52,48 @@ export default function ProjectDetail() {
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [slug, retryCount]);
 
-  if (loading) return <div className={styles.loading}>Loading...</div>;
-  if (!project) return <div className={styles.empty}>Project not found.</div>;
+  if (loading) {
+    return (
+      <div className={styles.stateBox} role="status">
+        <p className={styles.stateText}>Loading project...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.stateBox} role="alert">
+        <p className={styles.stateText}>
+          Could not load this project right now. Check your connection and try again.
+        </p>
+        <div className={styles.stateActions}>
+          <button
+            type="button"
+            className={styles.retryBtn}
+            onClick={() => setRetryCount((c) => c + 1)}
+          >
+            Try again
+          </button>
+          <Link to="/work" className={styles.backLink}>
+            Back to Work
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!project) {
+    return (
+      <div className={styles.stateBox}>
+        <p className={styles.stateText}>Project not found.</p>
+        <Link to="/work" className={styles.backLink}>
+          Back to Work
+        </Link>
+      </div>
+    );
+  }
 
   const tags = getProjectTags(project);
   const highlights = Array.isArray(project.highlights) ? project.highlights : [];
@@ -66,14 +111,19 @@ export default function ProjectDetail() {
   return (
     <article className={styles.container}>
       <div className={styles.topNav}>
-        <Link to="/work" className={styles.backLinkTop}>← Back to Work</Link>
+        <Link to="/work" className={styles.backLinkTop}>
+          Back to Work
+        </Link>
       </div>
 
       {project.coverImage?.asset && (
         <div className={styles.coverWrapper}>
           <img
-            src={urlFor(project.coverImage).auto('format').url()}
+            src={urlFor(project.coverImage).width(1200).height(675).fit('crop').auto('format').url()}
             alt={project.title}
+            width={1200}
+            height={675}
+            fetchPriority="high"
             className={styles.coverImage}
           />
         </div>
@@ -99,7 +149,15 @@ export default function ProjectDetail() {
         {hasPreviewOrLinks && (
           <div className={styles.previewSection}>
             {safePreviewVideo && (
-              <video autoPlay muted loop playsInline className={styles.previewVideo}>
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                width={960}
+                height={540}
+                className={styles.previewVideo}
+              >
                 <source src={safePreviewVideo} type="video/mp4" />
               </video>
             )}
@@ -108,12 +166,12 @@ export default function ProjectDetail() {
               <div className={styles.ctaRow}>
                 {safeLiveUrl && (
                   <a href={safeLiveUrl} target="_blank" rel="noopener noreferrer" className={styles.liveBtn}>
-                    → View Live Demo
+                    Open live app
                   </a>
                 )}
                 {safeRepoUrl && (
                   <a href={safeRepoUrl} target="_blank" rel="noopener noreferrer" className={styles.repoBtn}>
-                    → GitHub Repo
+                    View source
                   </a>
                 )}
               </div>
@@ -121,7 +179,7 @@ export default function ProjectDetail() {
 
             {highlights.length > 0 && (
               <div className={styles.highlightsBlock}>
-                <div className={styles.highlightsLabel}>Key Capabilities</div>
+                <div className={styles.highlightsLabel}>What is inside</div>
                 <div className={styles.highlightsGrid}>
                   {highlights.map((item, idx) => (
                     <div className={styles.highlightItem} key={item}>
@@ -147,12 +205,14 @@ export default function ProjectDetail() {
           {project.body ? (
             <PortableTextRenderer value={project.body} />
           ) : (
-            <p className={styles.emptyBody}>No details provided yet.</p>
+            <p className={styles.emptyBody}>No notes added for this project yet.</p>
           )}
         </div>
 
         <div className={styles.footer}>
-          <Link to="/work" className={styles.backLink}>← Back to Work</Link>
+          <Link to="/work" className={styles.backLink}>
+            Back to Work
+          </Link>
         </div>
       </div>
     </article>

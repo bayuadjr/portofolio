@@ -22,8 +22,13 @@ function Layout() {
 
   return (
     <div className={!isStudio ? 'wrap' : ''}>
+      {!isStudio && (
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
+      )}
       {!isStudio && <Navbar />}
-      <main key={location.pathname}>
+      <main id="main-content" tabIndex={-1} key={location.pathname}>
         <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/work" element={<Work />} />

@@ -5,18 +5,20 @@ export const FIELDNOTES_DEFAULTS = {
   featured: true,
   projectType: 'Web App',
   year: '2026',
+  summary:
+    'An offline-first field notebook for researchers working on slow connections. Includes team digests, theme tracking, perspective drift, and tension logs.',
   highlights: ['Team Digest', 'Theme Detector', 'Perspective Drift', 'Tension Log'],
   demoCredentials: {
     email: 'bayu@fieldnotes.id',
     password: 'password123',
   },
-  tags: ['Anthropology', 'AI Research', 'PWA'],
+  tags: ['Fieldwork', 'Web app', 'Notes'],
 };
 
 const LEGACY_TAG_MAP = {
   anthropology: 'Anthropology',
-  'data science': 'Data Science',
-  ethnography: 'Ethnography',
+  'data science': 'Data',
+  ethnography: 'Fieldwork',
   hustler: 'Operations',
 };
 
@@ -97,7 +99,7 @@ export function enrichProject(project) {
 
   return {
     ...project,
-    summary: cleanedSummary,
+    summary: cleanedSummary || FIELDNOTES_DEFAULTS.summary,
     liveUrl: project.liveUrl || FIELDNOTES_DEFAULTS.liveUrl,
     repoUrl: project.repoUrl || FIELDNOTES_DEFAULTS.repoUrl,
     featured:

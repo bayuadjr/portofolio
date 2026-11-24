@@ -1,27 +1,15 @@
-/* ===========================================
-   Writing Page — Editorial List Layout
-   =========================================== */
+/* Writing index layout */
 
 .hero {
   padding: 80px 0 44px;
   border-bottom: 1px solid var(--line);
 }
 
-.eyebrow {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--mid);
-  margin-bottom: 14px;
-}
-
 .heroTitle {
   font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(42px, 6vw, 68px);
+  font-size: clamp(40px, 6vw, 66px);
   letter-spacing: -0.015em;
   color: var(--ink);
   margin-bottom: 18px;
@@ -46,26 +34,28 @@
   padding-bottom: 100px;
 }
 
-/* ---------- Filter Bar ---------- */
 .filterBar {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  padding: 32px 0;
+  padding: 24px 0;
   border-bottom: 1px solid var(--line);
 }
 
 .filterBtn {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   padding: 8px 18px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13.5px;
+  font-weight: 400;
   border-radius: 999px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border-ui);
   background: transparent;
   color: var(--mid);
-  cursor: pointer;
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
   line-height: 1.4;
 }
 
@@ -75,13 +65,16 @@
   background: var(--panel);
 }
 
+.filterBtn:active {
+  transform: translateY(1px);
+}
+
 .filterBtn.active {
   background: var(--ink);
   color: var(--paper);
   border-color: var(--ink);
 }
 
-/* ---------- Writing List (Editorial Rows) ---------- */
 .list {
   display: flex;
   flex-direction: column;
@@ -92,7 +85,8 @@
   grid-template-columns: 140px 1fr auto;
   gap: 32px;
   align-items: baseline;
-  padding: 32px 0;
+  padding: 30px 0;
+  min-height: 44px;
   border-top: 1px solid var(--line);
   text-decoration: none;
   color: inherit;
@@ -104,15 +98,9 @@
 }
 
 .row:hover {
-  opacity: 0.75;
+  opacity: 0.78;
 }
 
-.row:hover .arrow {
-  transform: translateX(4px);
-  color: var(--ink);
-}
-
-/* Kolom kiri: tanggal & reading time */
 .rowMetaLeft {
   display: flex;
   flex-direction: column;
@@ -130,11 +118,10 @@
 .readingTime {
   font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--mid);
 }
 
-/* Kolom tengah: judul + deskripsi / summary */
 .rowMain {
   display: flex;
   flex-direction: column;
@@ -159,59 +146,81 @@
   line-height: 1.6;
 }
 
-/* Kolom kanan: tag / kategori + panah */
 .rowMetaRight {
   display: flex;
   align-items: baseline;
-  gap: 16px;
   white-space: nowrap;
   justify-content: flex-end;
 }
 
 .rowTag {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   color: var(--mid);
 }
 
-.arrow {
-  font-size: 16px;
-  color: var(--mid);
-  transition: transform 0.15s ease, color 0.15s ease;
-  display: inline-block;
+.stateBox {
+  padding: 64px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
 }
 
-/* Empty & Loading state */
-.emptyState {
-  padding: 80px 0;
+.stateText {
   font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
   font-size: 18px;
   color: var(--mid);
+  max-width: 520px;
 }
 
-/* ---------- Responsive ---------- */
+.retryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid var(--border-ui);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.retryBtn:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.retryBtn:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 900px) {
+  .row {
+    grid-template-columns: 120px 1fr auto;
+    gap: 20px;
+  }
+}
+
 @media (max-width: 720px) {
   .hero {
-    padding: 60px 0 32px;
+    padding: 56px 0 36px;
   }
 
   .filterBar {
-    padding: 24px 0;
-    gap: 6px;
-  }
-
-  .filterBtn {
-    padding: 6px 14px;
-    font-size: 13px;
+    padding: 20px 0;
+    gap: 8px;
   }
 
   .row {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 10px;
     padding: 24px 0;
   }
 
@@ -225,11 +234,11 @@
   }
 
   .rowSummary {
-    font-size: 14px;
+    font-size: 14.5px;
   }
 
   .rowMetaRight {
-    justify-content: space-between;
-    margin-top: 4px;
+    justify-content: flex-start;
+    margin-top: 2px;
   }
 }

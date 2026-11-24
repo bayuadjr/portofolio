@@ -1,27 +1,15 @@
-/* ===========================================
-   Work Page — Strict-Monochrome Editorial Showcase & Grid
-   =========================================== */
+/* Work page showcase and responsive grid */
 
 .hero {
   padding: 80px 0 44px;
   border-bottom: 1px solid var(--line);
 }
 
-.eyebrow {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--mid);
-  margin-bottom: 14px;
-}
-
 .heroTitle {
   font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(42px, 6vw, 68px);
+  font-size: clamp(40px, 6vw, 66px);
   letter-spacing: -0.015em;
   color: var(--ink);
   margin-bottom: 18px;
@@ -45,26 +33,29 @@
   padding-bottom: 100px;
 }
 
-/* ---------- Filter Bar ---------- */
+/* Filter bar */
 .filterBar {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  padding: 28px 0;
+  padding: 24px 0;
   border-bottom: 1px solid var(--line);
 }
 
 .filterBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 18px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 13.5px;
   font-weight: 400;
-  padding: 7px 16px;
   border-radius: 999px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border-ui);
   background: transparent;
   color: var(--mid);
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
   line-height: 1.4;
 }
 
@@ -74,13 +65,17 @@
   background: var(--panel);
 }
 
+.filterBtn:active {
+  transform: translateY(1px);
+}
+
 .filterBtn.active {
   background: var(--ink);
   color: var(--paper);
   border-color: var(--ink);
 }
 
-/* ---------- Showcase Wrapper ---------- */
+/* Showcase wrapper */
 .showcase {
   padding-top: 36px;
   display: flex;
@@ -88,10 +83,10 @@
   gap: 32px;
 }
 
-/* ---------- Featured Hero Card ---------- */
+/* Featured project card */
 .featuredCard {
   display: grid;
-  grid-template-columns: 1.25fr 0.95fr;
+  grid-template-columns: 1.2fr 1fr;
   gap: 32px;
   background: var(--surface);
   border: 1px solid var(--ink);
@@ -106,63 +101,27 @@
 
 .featuredMeta {
   display: flex;
-  align-items: center;
+  align-items: baseline;
+  justify-content: space-between;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 10px 16px;
   margin-bottom: 18px;
 }
 
-.featuredNum {
+.metaLine {
   font-family: var(--mono);
   font-size: 12px;
-  color: var(--subtle);
-  letter-spacing: 0.04em;
-}
-
-.featuredPill,
-.livePill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 9px;
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.featuredPill {
-  background: var(--ink);
-  color: var(--paper);
-  border: 1px solid var(--ink);
-}
-
-.livePill {
-  background: var(--paper);
-  color: var(--ink);
-  border: 1px solid var(--ink);
-}
-
-.liveDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--ink);
-  display: inline-block;
-}
-
-.metaType,
-.metaYear {
-  font-family: var(--mono);
-  font-size: 11px;
   color: var(--mid);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.03em;
 }
 
-.metaYear {
-  margin-left: auto;
+.liveStatus {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-ui);
+  padding-bottom: 1px;
 }
 
 .featuredTitle {
@@ -191,42 +150,13 @@
   font-size: 15.5px;
   color: var(--mid);
   line-height: 1.65;
-  margin-bottom: 24px;
-  max-width: 560px;
-}
-
-.highlightsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
   margin-bottom: 22px;
-}
-
-.highlightItem {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  background: var(--paper);
-}
-
-.highlightNum {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--subtle);
-}
-
-.highlightLabel {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink);
+  max-width: 560px;
 }
 
 .featuredActions {
   margin-top: auto;
-  padding-top: 22px;
+  padding-top: 24px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -238,13 +168,14 @@
 .ghostBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  min-height: 44px;
   padding: 10px 18px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   text-decoration: none;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
 }
 
 .primaryBtn {
@@ -271,16 +202,22 @@
 
 .ghostBtn {
   background: transparent;
-  color: var(--mid);
-  border: 1px solid var(--line);
+  color: var(--ink);
+  border: 1px solid var(--border-ui);
 }
 
 .ghostBtn:hover {
   border-color: var(--ink);
-  color: var(--ink);
+  background: var(--panel);
 }
 
-/* ---------- Featured Aside (Cover or Editorial Specimen + Demo Sandbox) ---------- */
+.primaryBtn:active,
+.secondaryBtn:active,
+.ghostBtn:active {
+  transform: translateY(1px);
+}
+
+/* Featured aside with optional cover, app list, and demo login */
 .featuredAside {
   display: flex;
   flex-direction: column;
@@ -305,74 +242,61 @@
   display: block;
 }
 
-.specimenBox {
+.insideBox {
   border: 1px solid var(--line);
   background: var(--paper);
-  padding: 18px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
-.specimenHead {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
+.insideHead {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
   padding-bottom: 10px;
   border-bottom: 1px solid var(--line);
-  font-family: var(--mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--mid);
 }
 
-.specimenLedger {
+.insideList {
   list-style: none;
   display: flex;
   flex-direction: column;
 }
 
-.specimenRow {
+.insideRow {
   display: grid;
-  grid-template-columns: 28px 1fr auto;
+  grid-template-columns: 28px 1fr;
   align-items: baseline;
   gap: 10px;
-  padding: 9px 0;
+  padding: 8px 0;
   border-top: 1px dashed var(--line);
 }
 
-.specimenRow:first-child {
+.insideRow:first-child {
   border-top: none;
   padding-top: 2px;
 }
 
-.specimenRow:last-child {
+.insideRow:last-child {
   padding-bottom: 2px;
 }
 
-.specimenIndex {
+.insideIndex {
   font-family: var(--mono);
   font-size: 11px;
   color: var(--subtle);
 }
 
-.specimenName {
-  font-size: 13.5px;
+.insideName {
+  font-size: 14px;
   font-weight: 500;
   color: var(--ink);
 }
 
-.specimenStatus {
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--mid);
-}
-
-/* ---------- 2-Column Project Grid ---------- */
+/* Two-column project grid */
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -384,7 +308,7 @@
   flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--line);
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 
 .card:hover {
@@ -418,17 +342,15 @@
   top: 12px;
   right: 12px;
   padding: 4px 10px;
-  font-family: var(--mono);
-  font-size: 10px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   background: var(--paper);
-  border: 1px solid var(--line);
+  border: 1px solid var(--border-ui);
   color: var(--ink);
 }
 
-/* Compact editorial index header when no cover image is set */
+/* Compact numeral header when no cover image is set */
 .cardNoMediaHeader {
   display: flex;
   justify-content: space-between;
@@ -455,19 +377,18 @@
 }
 
 .typeLabel {
-  font-family: var(--mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--mid);
 }
 
-/* ---------- Card Body ---------- */
+/* Card body */
 .cardBody {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 22px 24px 20px;
+  padding: 22px 24px 18px;
 }
 
 .cardMetaTop {
@@ -476,9 +397,8 @@
   justify-content: space-between;
   margin-bottom: 10px;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--mid);
-  letter-spacing: 0.04em;
 }
 
 .cardNum {
@@ -487,7 +407,7 @@
 
 .cardYear {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--subtle);
 }
 
@@ -513,18 +433,18 @@
 
 .cardDesc {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 400;
   color: var(--mid);
   line-height: 1.6;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* ---------- Card Footer ---------- */
+/* Card footer */
 .cardFooter {
   margin-top: auto;
   display: flex;
@@ -532,7 +452,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  padding-top: 16px;
+  padding-top: 14px;
   border-top: 1px dashed var(--line);
 }
 
@@ -543,85 +463,126 @@
 }
 
 .tagBadge {
-  font-family: var(--mono);
-  font-size: 11px;
-  padding: 3px 8px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  padding: 3px 9px;
   border: 1px solid var(--line);
   background: var(--paper);
   color: var(--mid);
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .cardActions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin-left: auto;
 }
 
-.quickLiveLink {
-  font-family: var(--mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 4px 9px;
-  border: 1px solid var(--ink);
-  color: var(--ink);
+.quickLiveLink,
+.actionLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.quickLiveLink {
+  padding: 6px 12px;
+  border: 1px solid var(--border-ui);
+  color: var(--ink);
 }
 
 .quickLiveLink:hover {
   background: var(--ink);
   color: var(--paper);
+  border-color: var(--ink);
+}
+
+.quickLiveLink:active {
+  transform: translateY(1px);
 }
 
 .actionLink {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 13px;
-  font-weight: 500;
+  padding: 6px 4px;
   color: var(--ink);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: transform 0.15s ease;
+  border-bottom: 1px solid transparent;
 }
 
 .actionLink:hover {
-  transform: translateX(3px);
+  border-bottom-color: var(--ink);
 }
 
-/* Empty & Loading state */
-.emptyState {
-  padding: 80px 0;
+/* Loading, error, and empty states */
+.stateBox {
+  padding: 64px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.stateText {
   font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
   font-size: 18px;
   color: var(--mid);
+  max-width: 520px;
 }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 860px) {
+.retryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid var(--border-ui);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.retryBtn:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.retryBtn:active {
+  transform: translateY(1px);
+}
+
+/* Tablet breakpoint before single column */
+@media (max-width: 900px) {
   .featuredCard {
     grid-template-columns: 1fr;
     gap: 24px;
     padding: 24px;
   }
+
+  .grid {
+    gap: 20px;
+  }
 }
 
+/* Mobile breakpoint */
 @media (max-width: 720px) {
   .hero {
-    padding: 60px 0 36px;
+    padding: 56px 0 36px;
   }
 
   .filterBar {
-    padding: 22px 0;
-    gap: 6px;
-  }
-
-  .filterBtn {
-    padding: 6px 14px;
-    font-size: 13px;
+    padding: 20px 0;
+    gap: 8px;
   }
 
   .showcase {
@@ -633,10 +594,6 @@
     padding: 20px;
   }
 
-  .highlightsGrid {
-    grid-template-columns: 1fr;
-  }
-
   .featuredActions {
     flex-direction: column;
     align-items: stretch;
@@ -645,7 +602,7 @@
   .primaryBtn,
   .secondaryBtn,
   .ghostBtn {
-    justify-content: center;
+    width: 100%;
   }
 
   .grid {

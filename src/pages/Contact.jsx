@@ -3,49 +3,49 @@ import styles from './Contact.module.css';
 
 const TEMPLATES = [
   {
-    id: 'research',
-    label: 'Research Collaboration',
-    subject: 'Research Collaboration Discussion',
-    body: `Hello Bayu,
+    id: 'hello',
+    label: 'Say hi',
+    subject: 'Hello Bayu',
+    body: `Hi Bayu,
 
-I am interested in your research focus in computational social science and digital anthropology. I would like to discuss the possibility of research collaboration regarding:
+I saw your notes and wanted to say hi or ask about:
 
-[Write your research topic or idea here]
+[Write your message here]
 
-Best regards,
+Best,
 [Your Name]`,
   },
   {
     id: 'project',
-    label: 'Project Opportunities',
-    subject: 'Project Opportunities & Data Science Discussion',
-    body: `Hello Bayu,
+    label: 'Talk about a project',
+    subject: 'Project discussion',
+    body: `Hi Bayu,
 
-I saw your portfolio and am interested in discussing cooperation opportunities or projects regarding:
+I wanted to reach out about a project or idea around:
 
-[Describe the project needs or data analysis here]
+[Describe what you are working on]
 
-Best regards,
+Best,
 [Your Name]`,
   },
   {
-    id: 'hello',
-    label: 'Say Hello',
-    subject: 'Hello Bayu — Exchanging Thoughts',
-    body: `Hello Bayu,
+    id: 'notes',
+    label: 'Compare notes',
+    subject: 'Comparing notes',
+    body: `Hi Bayu,
 
-I've been following the work and writing in your portfolio, and would like to simply exchange thoughts regarding:
+I have been reading or working on something similar and wanted to trade notes on:
 
-[Write your discussion topic or question here]
+[Write your topic or question here]
 
-Best regards,
+Best,
 [Your Name]`,
   },
 ];
 
 export default function Contact() {
   const emailTarget = import.meta.env.VITE_EMAIL || 'bayuadji500@gmail.com';
-  const [activeTemplate, setActiveTemplate] = useState('research');
+  const [activeTemplate, setActiveTemplate] = useState(TEMPLATES[0].id);
   const [subject, setSubject] = useState(TEMPLATES[0].subject);
   const [message, setMessage] = useState(TEMPLATES[0].body);
   const [copied, setCopied] = useState(false);
@@ -107,17 +107,16 @@ export default function Contact() {
 
         <div className={styles.mainContent}>
           <h1 className={styles.heading}>
-            Open to research discussions, project collaborations, or just exchanging thoughts.
+            Always happy to trade notes, talk about a project, or just say hi.
           </h1>
           <p className={styles.subheading}>
-            Choose a relevant draft message below, adjust the content if needed, then click the send button to directly open your email client.
+            Pick a starter below or write from scratch. Clicking send opens your email app with the draft ready.
           </p>
 
-          {/* Interactive Email Composer */}
           <div className={styles.composerBox}>
             <div className={styles.composerHeader}>
-              <span className={styles.composerTitle}>Select Message Template:</span>
-              <div className={styles.templateTabs}>
+              <span className={styles.composerTitle}>Starter note</span>
+              <div className={styles.templateTabs} role="group" aria-label="Message starters">
                 {TEMPLATES.map((tmpl) => (
                   <button
                     key={tmpl.id}
@@ -133,7 +132,7 @@ export default function Contact() {
 
             <div className={styles.fieldGroup}>
               <label className={styles.fieldLabel} htmlFor="contact-subject">
-                Email Subject
+                Subject
               </label>
               <input
                 id="contact-subject"
@@ -146,7 +145,7 @@ export default function Contact() {
 
             <div className={styles.fieldGroup}>
               <label className={styles.fieldLabel} htmlFor="contact-message">
-                Message Body
+                Message
               </label>
               <textarea
                 id="contact-message"
@@ -162,37 +161,33 @@ export default function Contact() {
                 className={styles.btnPrimary}
                 onClick={handleSend}
               >
-                Send Message Now →
+                Send email
               </button>
               <button
                 type="button"
                 className={styles.btnSecondary}
                 onClick={handleCopy}
               >
-                {copied ? '✓ Draft Copied' : 'Copy Draft Message'}
+                {copied ? 'Draft copied' : 'Copy draft'}
               </button>
               {copied && (
-                <span className={styles.copySuccess}>
-                  Ready to paste into your email client
+                <span className={styles.copyStatus} role="status">
+                  Ready to paste into your email client.
                 </span>
               )}
               {copyError && (
-                <span className={styles.copySuccess} role="status">
-                  Could not copy automatically — please copy the text manually.
+                <span className={styles.copyStatus} role="status">
+                  Could not copy automatically. Please select and copy the text manually.
                 </span>
               )}
             </div>
           </div>
 
-          {/* Direct channels */}
-          <div className={styles.linksSectionTitle}>Direct Channels</div>
+          <div className={styles.linksSectionTitle}>Elsewhere</div>
           <div className={styles.contactLinks}>
             <a href={`mailto:${emailTarget}`} className={styles.linkRow}>
               <span>Email</span>
-              <div className={styles.linkMeta}>
-                <span className={styles.linkSub}>{emailTarget}</span>
-                <span className={styles.linkArrow}>↗</span>
-              </div>
+              <span className={styles.linkSub}>{emailTarget}</span>
             </a>
             <a
               href="https://github.com/bayuadjr"
@@ -201,10 +196,7 @@ export default function Contact() {
               className={styles.linkRow}
             >
               <span>GitHub</span>
-              <div className={styles.linkMeta}>
-                <span className={styles.linkSub}>github.com/bayuadjr</span>
-                <span className={styles.linkArrow}>↗</span>
-              </div>
+              <span className={styles.linkSub}>github.com/bayuadjr</span>
             </a>
             <a
               href="https://www.linkedin.com/in/bayu-adji-ramadhan-886652236/"
@@ -213,10 +205,7 @@ export default function Contact() {
               className={styles.linkRow}
             >
               <span>LinkedIn</span>
-              <div className={styles.linkMeta}>
-                <span className={styles.linkSub}>Bayu Adji Ramadhan</span>
-                <span className={styles.linkArrow}>↗</span>
-              </div>
+              <span className={styles.linkSub}>Bayu Adji Ramadhan</span>
             </a>
             <a
               href="https://www.instagram.com/bayuadjr/"
@@ -225,10 +214,7 @@ export default function Contact() {
               className={styles.linkRow}
             >
               <span>Instagram</span>
-              <div className={styles.linkMeta}>
-                <span className={styles.linkSub}>@bayuadjr</span>
-                <span className={styles.linkArrow}>↗</span>
-              </div>
+              <span className={styles.linkSub}>@bayuadjr</span>
             </a>
           </div>
         </div>

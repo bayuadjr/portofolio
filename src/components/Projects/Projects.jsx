@@ -7,6 +7,8 @@ import { sanitizeHttpUrl } from '../../utils/url';
 
 export default function Projects({ limit = 3 }) {
   const [projects, setProjects] = useState(() => prepareProjects(fallbackProjects));
+  const [fetchError, setFetchError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -33,33 +35,52 @@ export default function Projects({ limit = 3 }) {
     client
       .fetch(query)
       .then((data) => {
-        if (!cancelled && data && data.length > 0) {
-          setProjects(prepareProjects(data));
+        if (!cancelled) {
+          setFetchError(false);
+          if (data && data.length > 0) {
+            setProjects(prepareProjects(data));
+          }
         }
       })
       .catch((err) => {
         console.error(err);
+        if (!cancelled) {
+          setFetchError(true);
+        }
       });
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [retryCount]);
 
   const displayedProjects = projects.slice(0, limit);
 
   return (
     <section className="threads" id="projects">
       <div className="threads-head">
-        <div className="intro-label">Work areas</div>
+        <div className="intro-label">Recent work</div>
         <div>
-          <p style={{ fontSize: '17px', color: 'var(--mid)', maxWidth: '560px', lineHeight: '1.6' }}>
-            Three intersecting paths: applied social research, ethnographic software tools, and computational data analysis.
+          <p className="threads-lead">
+            A few things I've been making and looking into lately, from small apps to field notes.
           </p>
         </div>
       </div>
 
       <div className="threads-list">
+        {fetchError && (
+          <div className="error-box" role="status">
+            <span>Could not refresh projects from the archive right now. Showing local notes instead.</span>
+            <button
+              type="button"
+              className="retry-btn"
+              onClick={() => setRetryCount((c) => c + 1)}
+            >
+              Try again
+            </button>
+          </div>
+        )}
+
         {displayedProjects.map((project, index) => {
           const num = project.num || String(index + 1).padStart(2, '0');
           const slug = project.slug?.current || project.slug || project._id;
@@ -79,7 +100,7 @@ export default function Projects({ limit = 3 }) {
                 <div className="thread-title-row">
                   <h3>{project.title}</h3>
                   {hasLiveDemo && (
-                    <span className="thread-live">Live Demo</span>
+                    <span className="thread-live">Live</span>
                   )}
                 </div>
                 <p>{project.summary || project.desc}</p>
@@ -87,7 +108,6 @@ export default function Projects({ limit = 3 }) {
 
               <div className="thread-aside">
                 {tagText && <span className="tag">{tagText}</span>}
-                <span className="thread-arrow" aria-hidden="true">→</span>
               </div>
             </Link>
           );
@@ -95,7 +115,7 @@ export default function Projects({ limit = 3 }) {
 
         <div className="threads-footer">
           <Link to="/work" className="intro-more">
-            View all projects →
+            See all projects
           </Link>
         </div>
       </div>

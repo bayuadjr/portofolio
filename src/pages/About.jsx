@@ -2,62 +2,54 @@ export default function About() {
   return (
     <>
       <section className="page-head">
-        <p className="page-eyebrow">Background</p>
         <h1>About</h1>
         <p>
-          What can we learn about people when we change the way we look at them?
+          How I got curious about ordinary habits, small tools, and why people rarely act the way a spreadsheet expects.
         </p>
       </section>
 
       <section className="section">
-        <div className="section-label">Profile</div>
+        <div className="section-label">Background</div>
         <div className="section-body">
           <p>
-            I am Bayu Adji Ramadhan, an Anthropology student at Universitas Brawijaya. My background
-            started in technology and software development in vocational high school (SMK), then continued into anthropology. Now I am
-            trying to bring the two together through data science and computational social science.
+            I'm Bayu Adji Ramadhan, an anthropology student at Universitas Brawijaya in Malang. I started out in vocational high school learning software engineering, then switched tracks to study people, culture, and everyday life.
           </p>
           <p>
-            Anthropology taught me not to rush to take a pattern as an answer. In the field,
-            context often changes the meaning of an action. Data gives me another way to see patterns on a larger scale.
+            Fieldwork taught me not to jump too quickly from a neat pattern to a final conclusion. People bend rules, improvise, and mean different things by the same gesture depending on who is watching.
           </p>
           <p>
-            Because of that, I am interested in using computational approaches not to replace anthropological research,
-            but to find patterns and questions that might be hard to see from just one approach.
+            Learning data analysis and building small web tools helps me look at those questions from another angle: spotting what repeats on paper, then stepping outside to understand why.
           </p>
         </div>
       </section>
 
       <section className="section">
-        <div className="section-label">Where I Come From</div>
+        <div className="section-label">Where I started</div>
         <div className="timeline">
           <div className="timeline-item">
-            <span className="when">SMK</span>
+            <span className="when">Vocational School</span>
             <div>
-              <h4>Technology</h4>
+              <h4>Software &amp; team habits</h4>
               <p>
-                I started my journey in vocational high school (SMK) with a background in Software Engineering and experience as a Scrum Master.
-                From there, I learned about software, project management, division of work, and how an idea turns into something that can actually be used.
+                Studied software engineering and helped run sprints as a student Scrum Master. That was where I first learned how small teams divide work, disagree, and turn a rough sketch into something people can click.
               </p>
             </div>
           </div>
           <div className="timeline-item">
-            <span className="when">UB</span>
+            <span className="when">University</span>
             <div>
               <h4>Anthropology</h4>
               <p>
-                At Universitas Brawijaya, I then entered the world of anthropology.
-                Fieldwork, ethnography, and qualitative research changed the way I see technology and data. Behind numbers and systems, there are always humans who have their own context, interests, habits, and ways of thinking.
+                Entered Universitas Brawijaya to study anthropology. Sitting through interviews and writing field notes changed how I look at numbers: behind every clean table there is someone with context, habits, and reasons of their own.
               </p>
             </div>
           </div>
           <div className="timeline-item">
-            <span className="when">MBKM</span>
+            <span className="when">Program Asah</span>
             <div>
-              <h4>Data Science</h4>
+              <h4>Working with data</h4>
               <p>
-                Now I am expanding that way of working with data science.
-                Through Program Asah, namely the Dicoding Data Science Specialist, I am learning Python, data analysis, statistics, machine learning, and computing fundamentals to start working on social issues with a more experimental approach.
+                Picked up Python, statistics, and machine learning through the Dicoding data program so I could explore social questions with code alongside qualitative notes.
               </p>
             </div>
           </div>
@@ -65,26 +57,26 @@ export default function About() {
       </section>
 
       <section className="section">
-        <div className="section-label">What I'm Exploring</div>
+        <div className="section-label">Things I spend time on</div>
         <div className="skills-grid">
           <div>
-            <h4>People & Society</h4>
+            <h4>Fieldwork &amp; reading</h4>
             <ul>
-              <li>Ethnographic fieldwork</li>
-              <li>Qualitative research</li>
-              <li>Digital society</li>
-              <li>Social behavior</li>
-              <li>Discourse and interaction</li>
+              <li>Ethnographic observation</li>
+              <li>Qualitative interviews</li>
+              <li>Online communities</li>
+              <li>Everyday social habits</li>
+              <li>Writing field notes</li>
             </ul>
           </div>
           <div>
-            <h4>Data & Computation</h4>
+            <h4>Code &amp; data</h4>
             <ul>
-              <li>Python — Pandas, NumPy, OOP</li>
-              <li>Machine learning</li>
-              <li>Computational social science</li>
-              <li>Statistics</li>
-              <li>Data analysis</li>
+              <li>Python, Pandas, NumPy</li>
+              <li>Exploratory data analysis</li>
+              <li>Basic statistics and modeling</li>
+              <li>Small React web apps</li>
+              <li>Offline-first tools</li>
             </ul>
           </div>
         </div>

@@ -1,6 +1,4 @@
-/* ===========================================
-   Navbar — Editorial Header & Mobile Drawer
-   =========================================== */
+/* Header navigation and mobile menu */
 
 .header {
   border-bottom: 1px solid var(--line);
@@ -10,11 +8,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 32px 0;
+  padding: 24px 0;
   gap: 24px;
 }
 
 .mark {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-size: 15px;
   font-weight: 500;
   letter-spacing: -0.01em;
@@ -31,10 +32,13 @@
   list-style: none;
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 28px;
 }
 
 .link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--mid);
   text-decoration: none;
   font-size: 14px;
@@ -46,25 +50,34 @@
   color: var(--ink);
 }
 
+.link.active {
+  font-weight: 500;
+}
+
 .menuBtn {
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 6px 12px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  min-height: 44px;
+  min-width: 68px;
+  padding: 8px 14px;
+  border: 1px solid var(--border-ui);
+  border-radius: 6px;
   background: transparent;
   color: var(--ink);
   font-family: inherit;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 500;
-  cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
 }
 
 .menuBtn:hover {
   border-color: var(--ink);
   background: var(--panel);
+}
+
+.menuBtn:active {
+  transform: translateY(1px);
 }
 
 .mobileMenu {
@@ -73,7 +86,7 @@
 
 @media (max-width: 720px) {
   .nav {
-    padding: 20px 0;
+    padding: 14px 0;
   }
 
   .navList {
@@ -92,8 +105,10 @@
   }
 
   .mobileLink {
-    display: block;
-    padding: 12px 0;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 0;
     border-top: 1px solid var(--line);
     color: var(--mid);
     text-decoration: none;
@@ -108,5 +123,9 @@
   .mobileLink:hover,
   .mobileLink.active {
     color: var(--ink);
+  }
+
+  .mobileLink.active {
+    font-weight: 500;
   }
 }

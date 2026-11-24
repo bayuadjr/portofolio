@@ -7,6 +7,8 @@ import styles from './Writing.module.css';
 export default function WritingPage() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const [activeFilter, setActiveFilter] = useState('All');
 
   useEffect(() => {
@@ -17,12 +19,14 @@ export default function WritingPage() {
       .then((data) => {
         if (!cancelled) {
           setPosts(data || []);
+          setError(false);
           setLoading(false);
         }
       })
       .catch((err) => {
         console.error('Failed to fetch posts:', err);
         if (!cancelled) {
+          setError(true);
           setLoading(false);
         }
       });
@@ -30,7 +34,13 @@ export default function WritingPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [retryCount]);
+
+  const handleRetry = () => {
+    setLoading(true);
+    setError(false);
+    setRetryCount((c) => c + 1);
+  };
 
   const uniqueTags = useMemo(() => {
     const tags = new Set();
@@ -57,30 +67,43 @@ export default function WritingPage() {
   return (
     <>
       <section className={styles.hero}>
-        <p className={styles.eyebrow}>Essays &amp; Field Notes</p>
         <h1 className={styles.heroTitle}>
           Writing<span className={styles.accent}>.</span>
         </h1>
         <p className={styles.heroDesc}>
-          Reflections on anthropology, data, books, and the things in between.
+          Half-formed ideas, book notes, and essays about things I keep noticing.
         </p>
       </section>
 
       <section className={styles.content}>
-        <div className={styles.filterBar}>
-          {uniqueTags.map((tag) => (
-            <button
-              key={tag}
-              className={`${styles.filterBtn} ${activeFilter === tag ? styles.active : ''}`}
-              onClick={() => setActiveFilter(tag)}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
+        {uniqueTags.length > 1 && (
+          <div className={styles.filterBar} role="group" aria-label="Filter writing by topic">
+            {uniqueTags.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                className={`${styles.filterBtn} ${activeFilter === tag ? styles.active : ''}`}
+                onClick={() => setActiveFilter(tag)}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
 
         {loading ? (
-          <div className={styles.emptyState}>Loading posts...</div>
+          <div className={styles.stateBox} role="status">
+            <p className={styles.stateText}>Loading posts...</p>
+          </div>
+        ) : error ? (
+          <div className={styles.stateBox} role="alert">
+            <p className={styles.stateText}>
+              Could not load writing right now. Check your connection and try again.
+            </p>
+            <button type="button" className={styles.retryBtn} onClick={handleRetry}>
+              Try again
+            </button>
+          </div>
         ) : filteredPosts.length > 0 ? (
           <div className={styles.list}>
             {filteredPosts.map((post) => {
@@ -104,19 +127,33 @@ export default function WritingPage() {
 
                   <div className={styles.rowMain}>
                     <h2 className={styles.rowTitle}>{post.title}</h2>
-                    <p className={styles.rowSummary}>{post.summary || 'Click to read more.'}</p>
+                    <p className={styles.rowSummary}>{post.summary || 'Read the essay.'}</p>
                   </div>
 
                   <div className={styles.rowMetaRight}>
                     {tagText && <span className={styles.rowTag}>{tagText}</span>}
-                    <span className={styles.arrow} aria-hidden="true">→</span>
                   </div>
                 </Link>
               );
             })}
           </div>
+        ) : posts.length > 0 ? (
+          <div className={styles.stateBox}>
+            <p className={styles.stateText}>No posts match "{activeFilter}".</p>
+            <button
+              type="button"
+              className={styles.retryBtn}
+              onClick={() => setActiveFilter('All')}
+            >
+              Show all posts
+            </button>
+          </div>
         ) : (
-          <div className={styles.emptyState}>Nothing here yet — check back soon.</div>
+          <div className={styles.stateBox}>
+            <p className={styles.stateText}>
+              No writing published yet. Essays and notes will show up here once added.
+            </p>
+          </div>
         )}
       </section>
     </>

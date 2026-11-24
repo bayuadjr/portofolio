@@ -1,27 +1,15 @@
-/* ===========================================
-   Beyond / Glimpses — Editorial Mosaic Layout
-   =========================================== */
+/* Beyond visual notes masonry layout */
 
 .hero {
   padding: 80px 0 44px;
   border-bottom: 1px solid var(--line);
 }
 
-.eyebrow {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--mid);
-  margin-bottom: 14px;
-}
-
 .heroTitle {
   font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(42px, 6vw, 68px);
+  font-size: clamp(40px, 6vw, 66px);
   letter-spacing: -0.015em;
   color: var(--ink);
   margin-bottom: 18px;
@@ -46,26 +34,28 @@
   padding-bottom: 100px;
 }
 
-/* ---------- Filter Bar ---------- */
 .filterBar {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  padding: 32px 0;
+  padding: 24px 0;
   border-bottom: 1px solid var(--line);
 }
 
 .filterBtn {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   padding: 8px 18px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13.5px;
+  font-weight: 400;
   border-radius: 999px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border-ui);
   background: transparent;
   color: var(--mid);
-  cursor: pointer;
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
   line-height: 1.4;
 }
 
@@ -75,13 +65,16 @@
   background: var(--panel);
 }
 
+.filterBtn:active {
+  transform: translateY(1px);
+}
+
 .filterBtn.active {
   background: var(--ink);
   color: var(--paper);
   border-color: var(--ink);
 }
 
-/* ---------- Mosaic Masonry Grid ---------- */
 .mosaic {
   padding: 48px 0 60px;
   column-count: 3;
@@ -105,7 +98,7 @@
 
 .itemLink:hover .card {
   border-color: var(--ink);
-  opacity: 0.85;
+  opacity: 0.88;
 }
 
 .image {
@@ -117,8 +110,10 @@
 
 .video {
   width: 100%;
+  aspect-ratio: 4 / 3;
   height: auto;
   display: block;
+  object-fit: cover;
 }
 
 .captionBox {
@@ -130,9 +125,8 @@
 .location {
   display: block;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--mid);
   margin-bottom: 4px;
 }
@@ -153,20 +147,51 @@
 
 .tag {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--mid);
 }
 
-/* Empty State */
-.emptyState {
-  padding: 80px 0;
+.stateBox {
+  padding: 64px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.stateText {
   font-family: 'Newsreader', Georgia, serif;
   font-style: italic;
   font-size: 18px;
   color: var(--mid);
+  max-width: 520px;
 }
 
-/* ---------- Responsive ---------- */
+.retryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid var(--border-ui);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.retryBtn:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.retryBtn:active {
+  transform: translateY(1px);
+}
+
 @media (max-width: 900px) {
   .mosaic {
     column-count: 2;
@@ -175,7 +200,7 @@
 
 @media (max-width: 600px) {
   .hero {
-    padding: 60px 0 32px;
+    padding: 56px 0 36px;
   }
 
   .mosaic {

@@ -1,6 +1,4 @@
-/* ===========================================
-   Contact Page — Editorial Layout & Message Composer
-   =========================================== */
+/* Contact page and message composer */
 
 .page {
   padding: 80px 0 100px;
@@ -15,12 +13,14 @@
 .label {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 14px;
+  font-weight: 500;
   color: var(--mid);
   padding-top: 6px;
 }
 
 .mainContent {
   max-width: 680px;
+  min-width: 0;
 }
 
 .heading {
@@ -30,7 +30,7 @@
   font-size: clamp(32px, 4.5vw, 52px);
   line-height: 1.25;
   color: var(--ink);
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   letter-spacing: -0.01em;
 }
 
@@ -39,15 +39,15 @@
   font-size: 16px;
   color: var(--mid);
   line-height: 1.6;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
 }
 
-/* ---------- Interactive Composer Box ---------- */
+/* Message composer */
 .composerBox {
-  background: var(--paper);
-  border: 1px solid var(--line);
+  background: var(--surface);
+  border: 1px solid var(--border-ui);
   padding: 32px;
-  margin-bottom: 60px;
+  margin-bottom: 56px;
 }
 
 .composerHeader {
@@ -68,25 +68,33 @@
 
 .templateTabs {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .tabBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 16px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 12px;
-  padding: 4px 12px;
+  font-size: 13px;
   border-radius: 999px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border-ui);
   background: transparent;
   color: var(--mid);
-  cursor: pointer;
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
 }
 
 .tabBtn:hover {
   border-color: var(--ink);
   color: var(--ink);
+  background: var(--panel);
+}
+
+.tabBtn:active {
+  transform: translateY(1px);
 }
 
 .tabBtn.tabActive {
@@ -102,29 +110,27 @@
 .fieldLabel {
   display: block;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 500;
   color: var(--mid);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   margin-bottom: 6px;
 }
 
 .input {
   width: 100%;
+  min-height: 44px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 15px;
   padding: 10px 14px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border-ui);
   background: var(--panel);
   color: var(--ink);
-  outline: none;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .input:focus {
   border-color: var(--ink);
-  background: var(--paper);
+  background: var(--surface);
 }
 
 .textarea {
@@ -134,17 +140,16 @@
   font-size: 15px;
   line-height: 1.6;
   padding: 14px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border-ui);
   background: var(--panel);
   color: var(--ink);
-  outline: none;
   resize: vertical;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .textarea:focus {
   border-color: var(--ink);
-  background: var(--paper);
+  background: var(--surface);
 }
 
 .composerActions {
@@ -155,39 +160,35 @@
   align-items: center;
 }
 
-.btnPrimary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  background: var(--ink);
-  color: var(--paper);
-  border: 1px solid var(--ink);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.15s ease;
-}
-
-.btnPrimary:hover {
-  background: #2a2a2a;
-}
-
+.btnPrimary,
 .btnSecondary {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  background: transparent;
-  color: var(--ink);
-  border: 1px solid var(--line);
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 22px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 14px;
-  font-weight: 400;
-  cursor: pointer;
-  transition: all 0.15s ease;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.btnPrimary {
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+}
+
+.btnPrimary:hover {
+  background: var(--ink-soft);
+  border-color: var(--ink-soft);
+}
+
+.btnSecondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--border-ui);
 }
 
 .btnSecondary:hover {
@@ -195,21 +196,24 @@
   background: var(--panel);
 }
 
-.copySuccess {
+.btnPrimary:active,
+.btnSecondary:active {
+  transform: translateY(1px);
+}
+
+.copyStatus {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 13px;
   color: var(--mid);
-  margin-left: 4px;
 }
 
-/* ---------- Direct Contact Links ---------- */
+/* Direct links */
 .linksSectionTitle {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 14px;
+  font-weight: 500;
   color: var(--mid);
-  margin-bottom: 16px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  margin-bottom: 12px;
 }
 
 .contactLinks {
@@ -221,11 +225,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 0;
+  gap: 16px;
+  min-height: 48px;
+  padding: 14px 0;
   border-top: 1px solid var(--line);
   color: var(--ink);
   text-decoration: none;
-  font-size: 17px;
+  font-size: 16px;
   transition: opacity 0.15s ease;
 }
 
@@ -234,29 +240,26 @@
 }
 
 .linkRow:hover {
-  opacity: 0.65;
-}
-
-.linkMeta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  opacity: 0.7;
 }
 
 .linkSub {
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--mid);
+  word-break: break-word;
+  text-align: right;
 }
 
-.linkArrow {
-  font-size: 16px;
-  color: var(--mid);
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 150px 1fr;
+    gap: 32px;
+  }
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 720px) {
   .page {
-    padding: 60px 0 80px;
+    padding: 56px 0 80px;
   }
 
   .layout {
@@ -273,7 +276,17 @@
     align-items: stretch;
   }
 
-  .btnPrimary, .btnSecondary {
-    justify-content: center;
+  .btnPrimary,
+  .btnSecondary {
+    width: 100%;
+  }
+
+  .linkRow {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .linkSub {
+    text-align: left;
   }
 }

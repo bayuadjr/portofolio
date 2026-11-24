@@ -3,6 +3,7 @@ import styles from './DemoCredentials.module.css';
 
 export default function DemoCredentials({ credentials, compact = false }) {
   const [copiedKey, setCopiedKey] = useState(null);
+  const [failedKey, setFailedKey] = useState(null);
   const timerRef = useRef(null);
 
   useEffect(() => {
@@ -16,6 +17,7 @@ export default function DemoCredentials({ credentials, compact = false }) {
   const copyValue = async (key, value) => {
     if (!value) return;
     clearTimeout(timerRef.current);
+    setFailedKey(null);
 
     try {
       if (navigator.clipboard?.writeText) {
@@ -39,14 +41,16 @@ export default function DemoCredentials({ credentials, compact = false }) {
     } catch (err) {
       console.error('Failed to copy demo credential:', err);
       setCopiedKey(null);
+      setFailedKey(key);
+      timerRef.current = setTimeout(() => setFailedKey(null), 2500);
     }
   };
 
   return (
     <div className={`${styles.box} ${compact ? styles.compact : ''}`}>
       <div className={styles.header}>
-        <span className={styles.label}>Demo Sandbox Access</span>
-        <span className={styles.hint}>Public test account</span>
+        <span className={styles.label}>Try the demo</span>
+        <span className={styles.hint}>Public test login</span>
       </div>
 
       <div className={styles.rows}>
@@ -62,7 +66,7 @@ export default function DemoCredentials({ credentials, compact = false }) {
               onClick={() => copyValue('email', credentials.email)}
               aria-label="Copy demo email"
             >
-              {copiedKey === 'email' ? 'Copied ✓' : 'Copy'}
+              {copiedKey === 'email' ? 'Copied' : failedKey === 'email' ? 'Failed' : 'Copy'}
             </button>
           </div>
         )}
@@ -79,7 +83,7 @@ export default function DemoCredentials({ credentials, compact = false }) {
               onClick={() => copyValue('password', credentials.password)}
               aria-label="Copy demo password"
             >
-              {copiedKey === 'password' ? 'Copied ✓' : 'Copy'}
+              {copiedKey === 'password' ? 'Copied' : failedKey === 'password' ? 'Failed' : 'Copy'}
             </button>
           </div>
         )}

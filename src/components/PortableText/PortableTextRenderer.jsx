@@ -30,7 +30,9 @@ const components = {
         <figure className={styles.figure}>
           <img
             src={urlFor(value).auto('format').url()}
-            alt={value.caption || 'Image'}
+            alt={value.caption || 'Illustration from post'}
+            width={1200}
+            height={800}
             className={styles.image}
             loading="lazy"
           />
@@ -46,7 +48,9 @@ const components = {
           <div className={styles.videoWrapper}>
             <iframe
               src={safeSrc}
-              title={value?.caption || 'Video Embed'}
+              title={value?.caption || 'Embedded video'}
+              width={960}
+              height={540}
               loading="lazy"
               referrerPolicy="strict-origin-when-cross-origin"
               sandbox="allow-scripts allow-same-origin allow-presentation"
@@ -64,7 +68,7 @@ const components = {
       return (
         <div className={styles.fileAttachment}>
           <a href={safeUrl} target="_blank" rel="noopener noreferrer">
-            📎 {value.description || 'Download File'}
+            Download: {value.description || 'Attachment'}
           </a>
         </div>
       );

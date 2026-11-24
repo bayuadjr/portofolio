@@ -1,7 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { client, urlFor } from '../sanity/client';
-import { prepareProjects, getProjectTags } from '../data/projectHelpers';
+import {
+  prepareProjects,
+  getProjectTags,
+  isFieldnotesProject,
+} from '../data/projectHelpers';
 import { sanitizeHttpUrl } from '../utils/url';
 import DemoCredentials from '../components/DemoCredentials/DemoCredentials';
 import styles from './Work.module.css';
@@ -9,6 +13,8 @@ import styles from './Work.module.css';
 export default function Work() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const [activeFilter, setActiveFilter] = useState('All');
 
   useEffect(() => {
@@ -39,12 +45,14 @@ export default function Work() {
       .then((data) => {
         if (!cancelled) {
           setProjects(prepareProjects(data || []));
+          setError(false);
           setLoading(false);
         }
       })
       .catch((err) => {
         console.error('Failed to fetch projects from Sanity:', err);
         if (!cancelled) {
+          setError(true);
           setLoading(false);
         }
       });
@@ -52,7 +60,13 @@ export default function Work() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [retryCount]);
+
+  const handleRetry = () => {
+    setLoading(true);
+    setError(false);
+    setRetryCount((c) => c + 1);
+  };
 
   const uniqueTags = useMemo(() => {
     const tags = new Set();
@@ -89,21 +103,19 @@ export default function Work() {
     const highlights = Array.isArray(project.highlights) ? project.highlights : [];
     const safeLiveUrl = sanitizeHttpUrl(project.liveUrl);
     const safeRepoUrl = sanitizeHttpUrl(project.repoUrl);
+    const liveLabel = isFieldnotesProject(project) ? 'Open Fieldnotes' : 'Open live app';
 
     return (
       <article className={styles.featuredCard}>
         <div className={styles.featuredMain}>
           <div className={styles.featuredMeta}>
-            <span className={styles.featuredNum}>{num}</span>
-            <span className={styles.featuredPill}>Featured</span>
+            <span className={styles.metaLine}>
+              {num} / {projectType}
+              {project.year ? ` / ${project.year}` : ''}
+            </span>
             {safeLiveUrl && (
-              <span className={styles.livePill}>
-                <span className={styles.liveDot} aria-hidden="true" />
-                Live Demo
-              </span>
+              <span className={styles.liveStatus}>Live demo available</span>
             )}
-            <span className={styles.metaType}>{projectType}</span>
-            {project.year && <span className={styles.metaYear}>{project.year}</span>}
           </div>
 
           <h2 className={styles.featuredTitle}>
@@ -114,19 +126,6 @@ export default function Work() {
 
           {(project.summary || project.desc) && (
             <p className={styles.featuredDesc}>{project.summary || project.desc}</p>
-          )}
-
-          {highlights.length > 0 && (
-            <div className={styles.highlightsGrid}>
-              {highlights.map((item, idx) => (
-                <div className={styles.highlightItem} key={item}>
-                  <span className={styles.highlightNum}>
-                    {String(idx + 1).padStart(2, '0')}
-                  </span>
-                  <span className={styles.highlightLabel}>{item}</span>
-                </div>
-              ))}
-            </div>
           )}
 
           {tags.length > 0 && (
@@ -147,11 +146,11 @@ export default function Work() {
                 rel="noopener noreferrer"
                 className={styles.primaryBtn}
               >
-                Try Live Demo ↗
+                {liveLabel}
               </a>
             )}
             <Link to={`/work/${slug}`} className={styles.secondaryBtn}>
-              Read Case Study →
+              Read the notes
             </Link>
             {safeRepoUrl && (
               <a
@@ -160,14 +159,14 @@ export default function Work() {
                 rel="noopener noreferrer"
                 className={styles.ghostBtn}
               >
-                GitHub ↗
+                View source
               </a>
             )}
           </div>
         </div>
 
         <aside className={styles.featuredAside}>
-          {project.coverImage?.asset ? (
+          {project.coverImage?.asset && (
             <Link to={`/work/${slug}`} className={styles.featuredMedia}>
               <img
                 src={urlFor(project.coverImage)
@@ -177,29 +176,27 @@ export default function Work() {
                   .auto('format')
                   .url()}
                 alt={project.title}
+                width={960}
+                height={540}
+                fetchPriority="high"
                 className={styles.featuredImg}
               />
             </Link>
-          ) : (
-            <div className={styles.specimenBox}>
-              <div className={styles.specimenHead}>
-                <span>{projectType}</span>
-                <span>{safeLiveUrl ? 'Live Sandbox' : 'Editorial Index'}</span>
-              </div>
+          )}
 
-              {highlights.length > 0 && (
-                <ul className={styles.specimenLedger}>
-                  {highlights.map((item, idx) => (
-                    <li className={styles.specimenRow} key={item}>
-                      <span className={styles.specimenIndex}>
-                        {String(idx + 1).padStart(2, '0')}
-                      </span>
-                      <span className={styles.specimenName}>{item}</span>
-                      <span className={styles.specimenStatus}>Module</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
+          {highlights.length > 0 && (
+            <div className={styles.insideBox}>
+              <div className={styles.insideHead}>Inside the app</div>
+              <ul className={styles.insideList}>
+                {highlights.map((item, idx) => (
+                  <li className={styles.insideRow} key={item}>
+                    <span className={styles.insideIndex}>
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                    <span className={styles.insideName}>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 
@@ -212,32 +209,43 @@ export default function Work() {
   return (
     <>
       <section className={styles.hero}>
-        <p className={styles.eyebrow}>Selected Projects</p>
         <h1 className={styles.heroTitle}>
           Work<span className={styles.accent}>.</span>
         </h1>
         <p className={styles.heroDesc}>
-          Selected projects spanning ethnography, data science, and project management
-          — the places where anthropology meets systems thinking.
+          Things I've built, studied, or helped run. Some started as class fieldwork, some as late-night experiments, and a few turned into tools other people can actually open.
         </p>
       </section>
 
       <section className={styles.content}>
-        <div className={styles.filterBar}>
-          {uniqueTags.map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              className={`${styles.filterBtn} ${activeFilter === tag ? styles.active : ''}`}
-              onClick={() => setActiveFilter(tag)}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
+        {uniqueTags.length > 1 && (
+          <div className={styles.filterBar} role="group" aria-label="Filter projects by topic">
+            {uniqueTags.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                className={`${styles.filterBtn} ${activeFilter === tag ? styles.active : ''}`}
+                onClick={() => setActiveFilter(tag)}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
 
         {loading ? (
-          <div className={styles.emptyState}>Loading projects...</div>
+          <div className={styles.stateBox} role="status">
+            <p className={styles.stateText}>Loading projects...</p>
+          </div>
+        ) : error ? (
+          <div className={styles.stateBox} role="alert">
+            <p className={styles.stateText}>
+              Could not load projects right now. Check your connection and try again.
+            </p>
+            <button type="button" className={styles.retryBtn} onClick={handleRetry}>
+              Try again
+            </button>
+          </div>
         ) : filteredProjects.length > 0 ? (
           <div className={styles.showcase}>
             {featuredProject && renderFeatured(featuredProject)}
@@ -256,8 +264,8 @@ export default function Work() {
                       projectType
                     );
                   const actionLabel = isPaperOrResearch
-                    ? 'Read Study →'
-                    : 'View Project →';
+                    ? 'Read notes'
+                    : 'Open project';
 
                   return (
                     <article className={styles.card} key={project._id || num}>
@@ -271,6 +279,8 @@ export default function Work() {
                               .auto('format')
                               .url()}
                             alt={project.title}
+                            width={800}
+                            height={450}
                             className={styles.cardImg}
                             loading="lazy"
                           />
@@ -327,7 +337,7 @@ export default function Work() {
                                 rel="noopener noreferrer"
                                 className={styles.quickLiveLink}
                               >
-                                Live ↗
+                                Live demo
                               </a>
                             )}
                             <Link to={`/work/${slug}`} className={styles.actionLink}>
@@ -342,8 +352,25 @@ export default function Work() {
               </div>
             )}
           </div>
+        ) : projects.length > 0 ? (
+          <div className={styles.stateBox}>
+            <p className={styles.stateText}>
+              No projects match "{activeFilter}".
+            </p>
+            <button
+              type="button"
+              className={styles.retryBtn}
+              onClick={() => setActiveFilter('All')}
+            >
+              Show all projects
+            </button>
+          </div>
         ) : (
-          <div className={styles.emptyState}>Nothing here yet — check back soon.</div>
+          <div className={styles.stateBox}>
+            <p className={styles.stateText}>
+              No projects published yet. New work will show up here once added.
+            </p>
+          </div>
         )}
       </section>
     </>

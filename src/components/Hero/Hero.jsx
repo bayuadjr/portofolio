@@ -4,20 +4,17 @@ import { FIELDNOTES_DEFAULTS } from '../../data/projectHelpers';
 export default function Hero() {
   return (
     <section className="hero" id="hero">
-      <div className="hero-top">
-        <p className="hero-eyebrow">Anthropology × Data Science × Systems</p>
-        <span className="hero-meta">Malang, ID — Universitas Brawijaya</span>
-      </div>
+      <p className="hero-meta">Malang, Indonesia</p>
 
       <h1>Bayu Adji Ramadhan</h1>
 
       <p className="hero-sub">
-        Anthropology student exploring how people, systems, and technology shape everyday life.
+        I study anthropology and spend my spare time working with data and building small tools. Mostly, I like paying attention to ordinary habits and seeing what shows up when you look a little closer.
       </p>
 
       <div className="hero-actions">
         <Link to="/work" className="btn-solid">
-          Explore Work →
+          See my work
         </Link>
         <a
           href={FIELDNOTES_DEFAULTS.liveUrl}
@@ -25,12 +22,8 @@ export default function Hero() {
           rel="noopener noreferrer"
           className="btn-outline"
         >
-          <span className="live-dot" aria-hidden="true" />
-          Fieldnotes Live Demo ↗
+          Open Fieldnotes
         </a>
-        <Link to="/contact" className="btn-text">
-          Get in touch
-        </Link>
       </div>
     </section>
   );
